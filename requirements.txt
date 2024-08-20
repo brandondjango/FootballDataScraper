@@ -2,3 +2,4 @@ openai
 cryptography
 pyyaml
 psycopg2-binary
+selenium
