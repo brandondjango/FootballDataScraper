@@ -1,16 +1,18 @@
 import os
 import yaml
 
+from definitions import CONFIG_ROOT
+
+
 #use yamls to avoid dbs for now
 class ConfigUtil:
-    CONFIG_ROOT = os.path.dirname(os.path.abspath(__file__))
 
     @staticmethod
     def get_config_path(config_type):
-        config_yaml_path = ConfigUtil.CONFIG_ROOT + '/config_paths.yaml'
+        config_yaml_path = CONFIG_ROOT + '/config_paths.yaml'
         with open(config_yaml_path, 'r') as file:
             config_paths = yaml.safe_load(file)
-        return ConfigUtil.CONFIG_ROOT + config_paths[config_type]
+        return CONFIG_ROOT + config_paths[config_type]
 
     @staticmethod
     def get_current_configs(config_type):
