@@ -4,8 +4,8 @@ from cryptography.fernet import Fernet
 import logging
 
 from src.database_connector.postgres_connector import PostgresConnector
-from src.player_data.player_match_stat_reader_util import PlayerMatchStatUtil
-from src.player_data.player_shot_data_util import MatchShotsStatsUtil
+from src.player_data.player_match_stats.player_match_stat_reader_util import PlayerMatchStatUtil
+
 
 class KeyManager:
 
