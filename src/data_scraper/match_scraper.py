@@ -35,8 +35,12 @@ class MatchScraper:
             player_rows = match_page.get_player_rows_from_tbody(match_player_summary_table_body)
 
             for row in player_rows:
-                player_profile = PlayerProfileBuilder()
-                PlayerProfileBuilder.build_player_profile_from_table_row(player_profile, row, match_page)
+                #build profile
+                player_profile = PlayerProfileBuilder.build_player_profile_from_table_row(row, match_page)
+
+                #save profile to db
+                PlayerProfileBuilder.save_player_profile(player_profile)
+
 
 
         #shots data
