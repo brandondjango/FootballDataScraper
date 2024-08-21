@@ -4,7 +4,8 @@ from cryptography.fernet import Fernet
 import logging
 
 from src.database_connector.postgres_connector import PostgresConnector
-
+from src.player_data.player_match_stat_reader_util import PlayerMatchStatUtil
+from src.player_data.player_shot_data_util import MatchShotsStatsUtil
 
 class KeyManager:
 
@@ -18,7 +19,7 @@ class KeyManager:
     def setup_chatgpt_key(self):
         try:
             db_connector = PostgresConnector()
-            os.environ['CHATGPT_KEY'] = db_connector.execute_parameterized_select_query("select key_value from keys where key_name = \'chatgpt_key\'", ())[0][0]
+            os.environ['CHATGPT_KEY'] = db_connector.execute_parameterized_select_query("keys", "select key_value from keys where key_name = \'chatgpt_key\'", ())[0][0]
         except:
             raise Exception("Could not fetch ChatGPT key")
 
@@ -38,16 +39,18 @@ class KeyManager:
 
     def get_cipher_key(self):
         db_connector = PostgresConnector()
-        os.environ['CIPHER_KEY'] = db_connector.execute_parameterized_select_query("select key_value from keys where key_name = \'cipher_key\'", ())[0][0]
+        os.environ['CIPHER_KEY'] = db_connector.execute_parameterized_select_query("keys", "select key_value from keys where key_name = \'cipher_key\'", ())[0][0]
         if(os.environ.get('CIPHER_KEY', None) == None):
             self.setup_cipher_key()
         return os.environ['CIPHER_KEY']
 
     def get_all_keys(self):
         db_connector = PostgresConnector()
-        print(db_connector.execute_parameterized_select_query("select * from keys", ()))
+        print(db_connector.execute_parameterized_select_query("keys", "select * from keys", ()))
 
-
+postgres = PostgresConnector()
+das = PlayerMatchStatUtil()
+das.read_table("23423", "23423")
 
 
 
