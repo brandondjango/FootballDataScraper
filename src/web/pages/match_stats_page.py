@@ -40,6 +40,9 @@ class MatchStatsPage:
     def get_player_shot_row_data_stat_id(self, tr):
         return tr.find_element(By.XPATH, f".//td").get_attribute("data-append-csv")
 
+    def get_shot_minute(self, tr):
+        return tr.find_element(By.XPATH, f".//*[contains(@data-stat, 'minute')]").text
+
     def get_player_row_data_name(self, tr):
         return tr.find_element(By.XPATH, f".//th").text.lstrip()
 
@@ -65,4 +68,4 @@ class MatchStatsPage:
         return all_player_stat_div.find_element(By.XPATH, f".//tbody")
 
     def get_player_shots_rows(selfself, tbody):
-        return tbody.find_elements(By.XPATH, f".//tr")
+        return tbody.find_elements(By.XPATH, f".//tr[not(contains(@class, 'spacer'))]")

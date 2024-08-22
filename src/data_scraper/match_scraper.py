@@ -54,8 +54,10 @@ class MatchScraper:
         #get player shots data rows
         player_match_shots_rows = match_page.get_player_shots_rows(match_player_shots_table_body)
         for row in player_match_shots_rows:
-            player_shots = PlayerMatchStatShotTableUtil.get_player_shots_from_rows(row, match_page, match_id)
-            print(player_shots)
+            #get player shot
+            player_shot = PlayerMatchStatShotTableUtil.get_player_shots_from_rows(row, match_page, match_id)
+            #save player shot
+            PlayerMatchStatShotTableUtil.save_player_match_shot(player_shot)
 
 
 
