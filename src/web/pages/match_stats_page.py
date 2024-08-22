@@ -34,11 +34,17 @@ class MatchStatsPage:
     def get_player_row_data_stat_text(self, tr, stat_name):
         return tr.find_element(By.XPATH, f".//th[contains(@data-stat, '" + stat_name + "')]").text.lstrip()
 
-    def get_player_row_data_stat_id(self, tr):
+    def get_summary_player_row_data_stat_id(self, tr):
         return tr.find_element(By.XPATH, f".//th").get_attribute("data-append-csv")
+
+    def get_player_shot_row_data_stat_id(self, tr):
+        return tr.find_element(By.XPATH, f".//td").get_attribute("data-append-csv")
 
     def get_player_row_data_name(self, tr):
         return tr.find_element(By.XPATH, f".//th").text.lstrip()
+
+    def get_shot_player_row_data_name(self, tr):
+        return tr.find_element(By.XPATH, f".//td").text.lstrip()
 
     def get_passing_stats_table(self, all_player_stat_div):
         return all_player_stat_div.find_element(By.XPATH, f".//table[contains(@id, 'passing')]")
@@ -51,3 +57,12 @@ class MatchStatsPage:
         for cell in data_cells:
             if "header" not in cell.get_attribute("data-stat"):
                 print(cell.get_attribute("data-stat"))
+
+    def get_all_shots_div(self):
+        return self.driver.find_element(By.ID, "shots_all")
+
+    def get_player_shots_table_body(self, all_player_stat_div):
+        return all_player_stat_div.find_element(By.XPATH, f".//tbody")
+
+    def get_player_shots_rows(selfself, tbody):
+        return tbody.find_elements(By.XPATH, f".//tr")

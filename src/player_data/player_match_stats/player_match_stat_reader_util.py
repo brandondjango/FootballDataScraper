@@ -13,7 +13,7 @@ class PlayerMatchStatTableUtil:
             player_summary_stats[stat.get_attribute("data-stat")] = stat.text
 
         #get player id
-        player_id = match_page.get_player_row_data_stat_id(row)
+        player_id = match_page.get_summary_player_row_data_stat_id(row)
         player_summary_stats["player_id"] = player_id
 
         #get player name

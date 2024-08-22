@@ -21,7 +21,7 @@ class PlayerProfileBuilder:
 
             #pull id from player
             if stat == "player":
-                player_id = match_page.get_player_row_data_stat_id(tr)
+                player_id = match_page.get_summary_player_row_data_stat_id(tr)
                 player_profile["id"] = player_id
 
             return player_profile
