@@ -26,13 +26,11 @@ class PlayerMatchStatTableUtil:
         return player_summary_stats
 
     @staticmethod
-    def save_match_summary_stats(player_summary_stats):
-        postgres_connector = PostgresConnector()
-
+    def save_match_summary_stats(player_summary_stats, postgres_connector):
         try:
             query = "INSERT INTO public.match_summary_stats(player_id, match_id) VALUES (%s, %s)"
             parameters = (player_summary_stats["player_id"], player_summary_stats["match_id"])
-            postgres_connector.execute_parameterized_insert_query("premier_league_stats", query, parameters)
+            postgres_connector.execute_parameterized_insert_query(query, parameters)
         except Exception as e:
             print("Could not insert because of: " + str(e))
             print("Table has constraint on player_id and match_id combination being unique.")
@@ -43,7 +41,10 @@ class PlayerMatchStatTableUtil:
             if (stat != "player_id" and stat != "match_id"):
                 query = "UPDATE public.match_summary_stats SET " + stat + " = (%s) WHERE match_id = (%s) and player_id = (%s);"
                 parameters = (player_summary_stats[stat], player_summary_stats['match_id'], player_summary_stats['player_id'])
-                postgres_connector.execute_parameterized_insert_query("premier_league_stats", query, parameters)
+                try:
+                    postgres_connector.execute_parameterized_insert_query(query, parameters)
+                except Exception as e:
+                    print("Could not insert because: " + str(e))
 
 
 

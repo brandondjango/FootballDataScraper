@@ -1,5 +1,6 @@
 import selenium
 
+from src.data_scraper.match_scraper import MatchScraper
 from src.web.driver_manager.driver_manager import DriverManager
 from src.web.pages.season_scores_and_fixtures_page import SeasonScoresAndFixturesPage
 
@@ -19,6 +20,9 @@ class MatchFetcher:
         #season_scores_and_fixtures_page.wait_for_games_to_load()
 
         match_ids = season_scores_and_fixtures_page.fetch_season_game_ids()
+
+        for id in match_ids:
+            MatchScraper.scrape_match(id)
 
 
 

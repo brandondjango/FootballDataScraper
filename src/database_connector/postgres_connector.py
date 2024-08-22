@@ -16,31 +16,32 @@ class PostgresConnector:
             print(f"The error '{e}' occurred")
             return None
 
-    def execute_parameterized_select_query(self, db_name, query, params):
+    def open_connection_cursor(self, db_name):
         self.create_connection(db_name)
-        cursor = self.connection.cursor()
+        self.cursor = self.connection.cursor()
+
+    def close_connection(self):
+        self.cursor.close()
+
+    def execute_parameterized_select_query(self, db_name, query, params):
         try:
-            cursor.execute(query, params)
-            result = cursor.fetchall()  # Fetch all rows from the last executed statement
-            cursor.close()
+            self.cursor.execute(query, params)
+            result = self.cursor.fetchall()  # Fetch all rows from the last executed statement
+            self.cursor.close()
             return result
         except OperationalError as e:
-            cursor.close()
+            self.cursor.close()
             print(f"The error '{e}' occurred")
             return None
 
-    def execute_parameterized_insert_query(self, db_name, query, params):
-        self.create_connection(db_name)
-        cursor = self.connection.cursor()
+    def execute_parameterized_insert_query(self, query, params):
         try:
-            cursor.execute(query, params)
-            self.connection.commit()
-            cursor.close()
+            self.cursor.execute(query, params)
         except OperationalError as e:
-            cursor.close()
+            self.connection.rollback()
             print(f"The error '{e}' occurred")
-            return None
-
+            return
+        self.connection.commit()
 
 
     def insert_into_keys_table(self, key_name, key_value):

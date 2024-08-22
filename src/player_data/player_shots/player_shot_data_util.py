@@ -32,21 +32,23 @@ class PlayerMatchStatShotTableUtil:
         return player_shots_stats
 
     @staticmethod
-    def save_player_match_shot(player_shot):
-        postgres_connector = PostgresConnector()
+    def save_player_match_shot(player_shot, postgres_connector):
         shot_id = PlayerMatchStatShotTableUtil.generate_unique_id(player_shot)
 
         try:
             query = "INSERT INTO public.match_shots_stats(shot_id) VALUES (\'" + shot_id + "\')"
             parameters = ()
-            postgres_connector.execute_parameterized_insert_query("premier_league_stats", query, parameters)
+            postgres_connector.execute_parameterized_insert_query(query, parameters)
         except Exception as e:
             print(str(e))
-##
-        for stat in player_shot.keys():
-            query = "UPDATE public.match_shots_stats SET " + stat + " = (%s) WHERE shot_id = (%s);"
-            parameters = (player_shot[stat], shot_id)
-            postgres_connector.execute_parameterized_insert_query("premier_league_stats", query, parameters)
+
+        try:
+            for stat in player_shot.keys():
+                query = "UPDATE public.match_shots_stats SET " + stat + " = (%s) WHERE shot_id = (%s);"
+                parameters = (player_shot[stat], shot_id)
+                postgres_connector.execute_parameterized_insert_query(query, parameters)
+        except Exception as e:
+            print("Error inserting player_match_shot: " + str(e))
 
     @staticmethod
     def generate_unique_id(player_shot):
