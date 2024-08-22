@@ -1,6 +1,7 @@
 #external
 from selenium.webdriver.common.by import By
 
+from src.player_data.player_match_stats.player_match_stat_reader_util import PlayerMatchStatTableUtil
 #internal
 from src.web.driver_manager.driver_manager import DriverManager
 
@@ -23,23 +24,34 @@ class MatchScraper:
         match_page = MatchStatsPage(driver)
         match_page.navigate_to_match_url(match_id)
 
-        #scrape
+
         match_player_stats_divs = match_page.get_player_stats_for_match_divs()
 
-        #1 table for home team, one for away
+        #1 div for home team, one for away
         for div in match_player_stats_divs:
             #Get summary stats of match table
             match_player_summary_table_body = match_page.get_summary_stats_table_body(div)
 
             #build players if they don't exist
-            player_rows = match_page.get_player_rows_from_tbody(match_player_summary_table_body)
+            player_summary_rows = match_page.get_player_rows_from_tbody(match_player_summary_table_body)
 
-            for row in player_rows:
+            #save information from summary table row by row
+            for row in player_summary_rows:
                 #build profile
                 player_profile = PlayerProfileBuilder.build_player_profile_from_table_row(row, match_page)
-
-                #save profile to db
+                #save profile to db: player names and ids
                 PlayerProfileBuilder.save_player_profile(player_profile)
+
+                #read row of summary table
+                player_summary = PlayerMatchStatTableUtil.get_summary_match_stats_for_player(row, match_page, match_id)
+                #write to player_summary db
+                PlayerMatchStatTableUtil.save_match_summary_stats(player_summary)
+
+        all_shots_div = match_page.get_all_shots_div()
+
+
+        driver.close()
+
 
 
 

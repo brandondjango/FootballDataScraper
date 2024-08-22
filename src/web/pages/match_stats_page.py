@@ -28,24 +28,26 @@ class MatchStatsPage:
     def get_player_rows_from_tbody(self, tbody):
         return tbody.find_elements(By.XPATH, f".//tr")
 
+    def get_stats_from_player_rows(self, tr):
+        return tr.find_elements(By.XPATH, f".//td")
+
     def get_player_row_data_stat_text(self, tr, stat_name):
-        return tr.find_element(By.XPATH, f".//th[contains(@data-stat, '" + stat_name + "')]").text
+        return tr.find_element(By.XPATH, f".//th[contains(@data-stat, '" + stat_name + "')]").text.lstrip()
 
     def get_player_row_data_stat_id(self, tr):
-        pattern = r'players/([^/]+)/[^/]+$'
-        link = str(tr.find_element(By.XPATH, f".//a").get_attribute("href"))
-        match = re.search(pattern, link)
+        return tr.find_element(By.XPATH, f".//th").get_attribute("data-append-csv")
 
-        if match:
-            text = match.group(1)
-            return text
-        else:
-            return None
-
-
+    def get_player_row_data_name(self, tr):
+        return tr.find_element(By.XPATH, f".//th").text.lstrip()
 
     def get_passing_stats_table(self, all_player_stat_div):
         return all_player_stat_div.find_element(By.XPATH, f".//table[contains(@id, 'passing')]")
 
     def get_pass_types_stats_table(self, all_player_stat_div):
         return all_player_stat_div.find_element(By.XPATH, f".//table[contains(@id, 'pass_types')]")
+
+    def print_data_stats(self, div):
+        data_cells = div.find_element(By.XPATH, f".//thead").find_elements(By.XPATH, f".//th")
+        for cell in data_cells:
+            if "header" not in cell.get_attribute("data-stat"):
+                print(cell.get_attribute("data-stat"))

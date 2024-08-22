@@ -34,4 +34,13 @@ class PlayerProfileBuilder:
         parameters = (player_profile["id"], player_profile["player"])
         postgres_connector.execute_parameterized_insert_query("premier_league_stats", query, parameters)
 
+    @staticmethod
+    def update_player_profile(player_profile):
+        postgres_connector = PostgresConnector()
+
+        query = "UPDATE players SET player_name = %s where player_id = %s"
+        parameters = (player_profile["player"], player_profile["id"])
+        print(parameters)
+        postgres_connector.execute_parameterized_insert_query("premier_league_stats", query, parameters)
+
 
