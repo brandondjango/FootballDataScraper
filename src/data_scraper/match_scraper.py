@@ -1,4 +1,6 @@
 # external
+import time
+
 from selenium.webdriver.common.by import By
 
 from src.database_connector.postgres_connector import PostgresConnector
@@ -23,6 +25,9 @@ class MatchScraper:
 
         match_page = MatchStatsPage(driver)
         match_page.navigate_to_match_url(match_id)
+
+        #todo remove
+        time.sleep(5)
 
         # Scrape summary statistics on a match page
         MatchScraper.scrape_match_summary(match_id, match_page)
@@ -84,4 +89,3 @@ class MatchScraper:
         finally:
             postgres_connector.close_connection()
 
-MatchScraper.scrape_match("55fd92c7")
