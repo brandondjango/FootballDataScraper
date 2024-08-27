@@ -22,15 +22,19 @@ RUN apt-get update && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone the PyAI Git repository
-RUN git clone https://github.com/brandondjango/PyAI.git /app/PyAI
+RUN git clone https://github.com/brandondjango/PyAI.git /PyAI
 
 # Set the working directory to the project root
-WORKDIR /app/PyAI
+WORKDIR /PyAI
 
-# Download the ChromeDriver to the project root
-RUN wget -O chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/128.0.6613.84/linux64/chrome-linux64.zip \
-    && unzip chrome-linux64.zip -d ./ \
-    && rm chrome-linux64.zip
+RUN mkdir -p /PyAI/drivers
+
+# Download ChromeDriver and move it to the drivers directory
+RUN CHROMEDRIVER_VERSION=128.0.6613.84 \
+    && wget -q https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip
+RUN unzip chromedriver-linux64.zip -d /tmp/chromedriver
+RUN mv /tmp/chromedriver/chromedriver-linux64/chromedriver /PyAI/drivers/chromedriver
+RUN rm -rf /tmp/chromedriver chrome-linux64.zip
 
 # Optionally, install Python dependencies (if required by the PyAI project)
 RUN pip install -r requirements.txt
