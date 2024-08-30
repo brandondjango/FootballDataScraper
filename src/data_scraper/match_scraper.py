@@ -33,7 +33,7 @@ class MatchScraper:
         MatchScraper.scrape_match_summary(match_id, match_page)
 
         # Scrape player shot statistics on a match page
-        #MatchScraper.scrape_match_player_shots(match_id, match_page)
+        MatchScraper.scrape_match_player_shots(match_id, match_page)
 
         driver.close()
 
@@ -127,4 +127,3 @@ class MatchScraper:
                 PlayerMatchStatShotTableUtil.save_player_match_shot(player_shot, postgres_connector)
         finally:
             postgres_connector.close_connection()
-

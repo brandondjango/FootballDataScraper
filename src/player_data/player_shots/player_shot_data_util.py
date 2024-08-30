@@ -42,11 +42,22 @@ class PlayerMatchStatShotTableUtil:
         except Exception as e:
             print(str(e))
 
+        partial_query = ""
+        parameters = ()
+        #build part of query
+        for stat in player_shot.keys():
+            partial_query = partial_query + stat + " = (%s),"
+            parameters = parameters + (player_shot[stat],)
+
+        #remove last comma
+        partial_query = partial_query[:-1]
+        query = "UPDATE public.match_shots_stats SET " + partial_query + " WHERE shot_id = (%s);"
+
+        parameters = parameters + (shot_id,)
+
+
         try:
-            for stat in player_shot.keys():
-                query = "UPDATE public.match_shots_stats SET " + stat + " = (%s) WHERE shot_id = (%s);"
-                parameters = (player_shot[stat], shot_id)
-                postgres_connector.execute_parameterized_insert_query(query, parameters)
+            postgres_connector.execute_parameterized_insert_query(query, parameters)
         except Exception as e:
             print("Error inserting player_match_shot: " + str(e))
 
