@@ -17,6 +17,7 @@ class DriverManager:
         #open chrome
         chrome_options = Options()
         chrome_options.add_argument("--incognito")  # Use incognito mode
+        chrome_options.add_argument("--headless")
 
         capabilities = DesiredCapabilities.CHROME.copy()
         capabilities['browserName'] = 'chrome'

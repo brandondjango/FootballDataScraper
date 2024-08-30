@@ -11,18 +11,18 @@ class PlayerProfileBuilder:
         player_stat_names = ["player"]
         for stat in player_stat_names:
             #new player profile
-            player_profile = {}
+            player_profile = ()
 
             #pull stat from row
             stat_value = match_page.get_player_row_data_stat_text(tr, stat)
 
             # add to profile, remove leading white space
-            player_profile[stat] = stat_value.lstrip()
+            player_profile = (stat_value.lstrip(),)
 
             #pull id from player
             if stat == "player":
                 player_id = match_page.get_summary_player_row_data_stat_id(tr)
-                player_profile["id"] = player_id
+                player_profile = (player_id,) + player_profile
 
             return player_profile
 
@@ -33,6 +33,15 @@ class PlayerProfileBuilder:
         parameters = (player_profile["id"], player_profile["player"])
         try:
             postgres_connector.execute_parameterized_insert_query(query, parameters)
+        except Exception as e:
+            print(f"Likely Duplicate: {e}")
+
+    @staticmethod
+    def save_player_profiles(player_profiles, postgres_connector):
+        args_str = ','.join(postgres_connector.cursor.mogrify("(%s,%s)", x).decode("utf-8") for x in player_profiles)
+        query = "INSERT INTO players(player_id, player_name) VALUES " + args_str
+        try:
+            postgres_connector.execute_insert_query(query)
         except Exception as e:
             print(f"Likely Duplicate: {e}")
 
