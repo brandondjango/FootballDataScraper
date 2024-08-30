@@ -39,39 +39,41 @@ class MatchScraper:
 
     @staticmethod
     def scrape_match_summary(match_id, match_page):
-
         MatchScraper.save_player_profiles(match_page)
+        MatchScraper.save_player_summary_stats(match_id, match_page)
 
 
-        ## get summary stats divs
-        #match_player_stats_divs = match_page.get_player_stats_for_match_divs()
-#
-        ## 1 div for home team, 1 for away
-        #for div in match_player_stats_divs:
-        #    # Get summary stats of match table
-        #    match_player_summary_table_body = match_page.get_summary_stats_table_body(div)
-#
-        ## build players if they don't exist
-        #player_summary_rows = match_page.get_player_rows_from_tbody(match_player_summary_table_body)
-#
-        #postgres_connector = PostgresConnector()
-        #postgres_connector.open_connection_cursor("premier_league_stats")
-        #try:
-        #    # save information from summary table row by row
-        #    for row in player_summary_rows:
-        #        # build profile
-        #        #player_profile = PlayerProfileBuilder.build_player_profile_from_table_row(row, match_page)
-        #        # save profile to db: player names and ids
-#
-        #        #PlayerProfileBuilder.save_player_profile(player_profile, postgres_connector)
-#
-        #        # read row of summary table
-        #        player_summary = PlayerMatchStatTableUtil.get_summary_match_stats_for_player(row, match_page, match_id)
-#
-        #        # write to player_summary db
-        #        PlayerMatchStatTableUtil.save_match_summary_stats(player_summary, postgres_connector)
-        #finally:
-        #    postgres_connector.close_connection()
+    @staticmethod
+    def save_player_summary_stats(match_id, match_page):
+        #open connection + cursor before all inserts
+        postgres_connector = PostgresConnector()
+        postgres_connector.open_connection_cursor("premier_league_stats")
+
+        try:
+            # get summary stats divs
+            match_player_stats_divs = match_page.get_player_stats_for_match_divs()
+
+            # loop through summary rows for both teams
+            for div in match_player_stats_divs:
+                player_summary_stats = []
+
+                # Get summary stats of match table
+                match_player_summary_table_body = match_page.get_summary_stats_table_body(div)
+
+                # build players if they don't exist
+                player_summary_rows = match_page.get_player_rows_from_tbody(match_player_summary_table_body)
+
+                #loop through home/away team
+                for row in player_summary_rows:
+                    # build profiles
+                    player_summary = PlayerMatchStatTableUtil.get_summary_match_stats_for_player(row, match_page, match_id)
+                    PlayerMatchStatTableUtil.save_match_summary_stats(player_summary, postgres_connector)
+
+                #save summaries to db
+
+        finally:
+            #always close connection cursor
+            postgres_connector.close_connection()
 
     @staticmethod
     def save_player_profiles(match_page):
@@ -106,9 +108,6 @@ class MatchScraper:
             #always close connection cursor
             postgres_connector.close_connection()
 
-
-
-
     @staticmethod
     def scrape_match_player_shots(match_id, match_page):
 
@@ -129,4 +128,3 @@ class MatchScraper:
         finally:
             postgres_connector.close_connection()
 
-MatchScraper.scrape_match("0844ff10")

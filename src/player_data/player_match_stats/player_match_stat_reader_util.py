@@ -33,18 +33,26 @@ class PlayerMatchStatTableUtil:
             postgres_connector.execute_parameterized_insert_query(query, parameters)
         except Exception as e:
             print("Could not insert because of: " + str(e))
-            print("Table has constraint on player_id and match_id combination being unique.")
+            print("Warning: Table has constraint on player_id and match_id combination being unique.")
 
-
-
+        partial_query = ""
+        parameters = ()
+        #build part of query
         for stat in player_summary_stats.keys():
             if (stat != "player_id" and stat != "match_id"):
-                query = "UPDATE public.match_summary_stats SET " + stat + " = (%s) WHERE match_id = (%s) and player_id = (%s);"
-                parameters = (player_summary_stats[stat], player_summary_stats['match_id'], player_summary_stats['player_id'])
-                try:
-                    postgres_connector.execute_parameterized_insert_query(query, parameters)
-                except Exception as e:
-                    print("Could not insert because: " + str(e))
+                partial_query = partial_query + stat + " = (%s),"
+                parameters = parameters + (player_summary_stats[stat],)
+
+        #remove last comma
+        partial_query = partial_query[:-1]
+        #query and params
+        query = "UPDATE public.match_summary_stats SET " + partial_query + " WHERE match_id = (%s) and player_id = (%s);"
+        parameters = parameters + (player_summary_stats['match_id'], player_summary_stats['player_id'])
+
+        try:
+            postgres_connector.execute_parameterized_insert_query(query, parameters)
+        except Exception as e:
+            print("Could not insert because: " + str(e))
 
 
 
