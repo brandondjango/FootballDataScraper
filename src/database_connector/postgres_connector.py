@@ -2,48 +2,7 @@ import psycopg2
 from google.cloud import secretmanager
 from psycopg2 import OperationalError
 
-import os
-import ssl
-
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-import sqlalchemy
-
-Base = sqlalchemy.orm.declarative_base()
-
-class Player(Base):
-    __tablename__ = 'players'
-
-    player_id = Column(String, primary_key=True)
-    player_name = Column(String)
-
-    def __repr__(self):
-        return f"<Player(player_id={self.player_id}, player_name={self.player_name})>"
-
-
-
-
 class PostgresConnector:
-
-    @staticmethod
-    def create_connection_with_sqlalhemy() -> sqlalchemy.engine.base.Engine:
-        #engine = sqlalchemy.create_engine(
-        #    # Equivalent URL:
-        #    # postgresql+pg8000://<db_user>:<db_pass>@<db_host>:<db_port>/<db_name>
-        #    sqlalchemy.engine.url.URL.create(
-        #        drivername="postgresql+pg8000",
-        #        username="bdon_db",
-        #        password=PostgresConnector.get_db_pass(),
-        #        host="34.136.28.192",
-        #        port=5432,
-        #        database="premier_league_stats",
-        #    ),
-        #    # ...
-        #)
-        DATABASE_URL = "postgresql://bdon_db:" + PostgresConnector.get_db_pass() + "@34.136.28.192:5432/premier_league_stats"
-        engine = create_engine(DATABASE_URL)
-        return engine
 
     def create_connection(self, db_name):
         try:
@@ -121,16 +80,4 @@ class PostgresConnector:
         return secret_value
 
 
-#postgres_conn = PostgresConnector()
-#postgres_conn.create_connection("asd")
-# Example usage: Query all players
-#Session = sessionmaker(bind=PostgresConnector.create_connection_with_sqlalhemy())
-#session = Session()
-#
-#
-#
-#players = session.query(Player).all()
-#
-## Print the results
-#for player in players:
-#    print(player)
+print(PostgresConnector.get_db_pass())
