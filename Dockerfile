@@ -40,4 +40,4 @@ RUN rm -rf /tmp/chromedriver chrome-linux64.zip
 RUN pip install -r requirements.txt
 
 # Set the entrypoint to bash
-CMD ["bash"]
+CMD ["python", "src/controllers/data_scrape_controller.py"]
