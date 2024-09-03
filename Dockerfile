@@ -46,4 +46,4 @@ EXPOSE 8080
 RUN pwd && ls -l
 
 # Set the entrypoint to bash
-CMD ["python", "src/controllers/data_scrape_controller.py"]
+CMD ["python", "main.py"]
