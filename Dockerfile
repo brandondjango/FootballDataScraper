@@ -24,6 +24,9 @@ RUN apt-get update && apt-get install -y google-chrome-stable \
 # Clone the PyAI Git repository
 RUN git clone https://github.com/brandondjango/PyAI.git /PyAI
 
+# Ensure the repository is up to date
+RUN git pull origin master
+
 # Set the working directory to the project root
 WORKDIR /PyAI
 
