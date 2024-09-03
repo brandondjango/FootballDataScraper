@@ -42,8 +42,5 @@ RUN pip install -r requirements.txt
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
 
-# Run pwd and ls commands
-RUN pwd && ls -l
-
 # Set the entrypoint to bash
 CMD ["python", "main.py"]
