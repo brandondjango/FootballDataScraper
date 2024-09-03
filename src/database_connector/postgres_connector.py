@@ -2,6 +2,9 @@ import psycopg2
 from google.cloud import secretmanager
 from psycopg2 import OperationalError
 
+from src.config_util.config_util import ConfigUtil
+
+
 class PostgresConnector:
 
     def create_connection(self, db_name):
@@ -10,11 +13,12 @@ class PostgresConnector:
                     host="34.136.28.192",
                     database="premier_league_stats",
                     user="bdon_db",
-                    password=PostgresConnector.get_db_pass(),
+                    password=ConfigUtil.get_config_value("db_pass", "database"),
+                    #password=PostgresConnector.get_db_pass(),
                     port=5432  # default port for PostgreSQL
                 )
         except OperationalError as e:
-            print(f"The error '{e}' occurred")
+            print(f"The error '{e}' occurred.\nHave you used the setup DB call?")
             return None
 
     def open_connection_cursor(self, db_name):
@@ -79,5 +83,3 @@ class PostgresConnector:
 
         return secret_value
 
-
-print(PostgresConnector.get_db_pass())

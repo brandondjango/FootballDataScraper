@@ -1,0 +1,2 @@
+chatgpt: '/chatgpt_config.yaml'
+database: '/db_config.yaml'

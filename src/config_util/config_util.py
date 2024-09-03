@@ -37,3 +37,13 @@ class ConfigUtil:
         #write update
         with open(ConfigUtil.get_config_path(config_to_change), 'w') as file:
             yaml.dump(configs_to_change, file, default_flow_style=False)
+
+    @staticmethod
+    def get_config_value(key, config_to_fetch):
+        #get configurations
+        fetched_configs = ConfigUtil.get_current_configs(config_to_fetch)
+
+        #return config
+        return fetched_configs[key]
+
+
