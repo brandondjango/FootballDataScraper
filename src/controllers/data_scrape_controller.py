@@ -1,9 +1,7 @@
 import os
 
-import yaml
 from flask import Flask, request, jsonify
 
-from src.config_util.config_util import ConfigUtil
 from src.data_scraper.match_scraper import MatchScraper
 
 app = Flask(__name__)
