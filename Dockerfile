@@ -39,5 +39,11 @@ RUN rm -rf /tmp/chromedriver chrome-linux64.zip
 # Optionally, install Python dependencies (if required by the PyAI project)
 RUN pip install -r requirements.txt
 
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
+
+# Run pwd and ls commands
+RUN pwd && ls -l
+
 # Set the entrypoint to bash
 CMD ["python", "src/controllers/data_scrape_controller.py"]
