@@ -26,7 +26,7 @@ def api_endpoint():
     # Process the data as needed
     response = {
         'status': 'success',
-        'message': "Scraped match with id: " + data.get(match_id)
+        'message': "Scraped match with id: " + match_id
     }
     return jsonify(response), 200
 
@@ -35,12 +35,12 @@ def db_setup_endpoint():
     data = request.json
     db_pass = data.get('db_pass')
 
-    ConfigUtil.add_config_value("db_pass", db_pass, "database")
+    os.environ['DB_PASS'] = db_pass
 
     # Process the data as needed
     response = {
         'status': 'success',
-        'data_received': ConfigUtil.get_current_configs("database")
+        'data_received': os.environ['DB_PASS']
     }
     return jsonify(response), 200
 

@@ -19,23 +19,24 @@ class MatchScraper:
 
     @staticmethod
     def scrape_match(match_id, driver=None):
-        if (driver is None):
-            driver_manager = DriverManager()
-            driver = DriverManager.get_driver(driver_manager)
+        try:
+            if (driver is None):
+                driver_manager = DriverManager()
+                driver = DriverManager.get_driver(driver_manager)
 
-        match_page = MatchStatsPage(driver)
-        match_page.navigate_to_match_url(match_id)
+            match_page = MatchStatsPage(driver)
+            match_page.navigate_to_match_url(match_id)
 
-        #todo remove
-        time.sleep(5)
+            #todo remove
+            time.sleep(5)
 
-        # Scrape summary statistics on a match page
-        MatchScraper.scrape_match_summary(match_id, match_page)
+            # Scrape summary statistics on a match page
+            MatchScraper.scrape_match_summary(match_id, match_page)
 
-        # Scrape player shot statistics on a match page
-        MatchScraper.scrape_match_player_shots(match_id, match_page)
-
-        driver.close()
+            # Scrape player shot statistics on a match page
+            MatchScraper.scrape_match_player_shots(match_id, match_page)
+        finally:
+            driver.close()
 
     @staticmethod
     def scrape_match_summary(match_id, match_page):
@@ -100,13 +101,14 @@ class MatchScraper:
                     # build profiles
                     player_profile = PlayerProfileBuilder.build_player_profile_from_table_row(row, match_page)
                     players.append(player_profile)
-                    print(players)
+
 
                 #save profiles to db
                 PlayerProfileBuilder.save_player_profiles(players, postgres_connector)
         finally:
             #always close connection cursor
             postgres_connector.close_connection()
+        print("Player Profiles Saved")
 
     @staticmethod
     def scrape_match_player_shots(match_id, match_page):

@@ -33,33 +33,35 @@ class PlayerMatchStatShotTableUtil:
 
     @staticmethod
     def save_player_match_shot(player_shot, postgres_connector):
-        shot_id = PlayerMatchStatShotTableUtil.generate_unique_id(player_shot)
-
         try:
-            query = "INSERT INTO public.match_shots_stats(shot_id) VALUES (\'" + shot_id + "\')"
+            shot_id = PlayerMatchStatShotTableUtil.generate_unique_id(player_shot)
+
+            try:
+                query = "INSERT INTO public.match_shots_stats(shot_id) VALUES (\'" + shot_id + "\')"
+                parameters = ()
+                postgres_connector.execute_parameterized_insert_query(query, parameters)
+            except Exception as e:
+                print(str(e))
+
+            partial_query = ""
             parameters = ()
-            postgres_connector.execute_parameterized_insert_query(query, parameters)
+            #build part of query
+            for stat in player_shot.keys():
+                partial_query = partial_query + stat + " = (%s),"
+                parameters = parameters + (player_shot[stat],)
+
+            #remove last comma
+            partial_query = partial_query[:-1]
+            query = "UPDATE public.match_shots_stats SET " + partial_query + " WHERE shot_id = (%s);"
+
+            parameters = parameters + (shot_id,)
+
+            try:
+                postgres_connector.execute_parameterized_insert_query(query, parameters)
+            except Exception as e:
+                print("Error inserting player_match_shot: " + str(e))
         except Exception as e:
-            print(str(e))
-
-        partial_query = ""
-        parameters = ()
-        #build part of query
-        for stat in player_shot.keys():
-            partial_query = partial_query + stat + " = (%s),"
-            parameters = parameters + (player_shot[stat],)
-
-        #remove last comma
-        partial_query = partial_query[:-1]
-        query = "UPDATE public.match_shots_stats SET " + partial_query + " WHERE shot_id = (%s);"
-
-        parameters = parameters + (shot_id,)
-
-
-        try:
-            postgres_connector.execute_parameterized_insert_query(query, parameters)
-        except Exception as e:
-            print("Error inserting player_match_shot: " + str(e))
+            print("skipping shot because of: " + str(e))
 
     @staticmethod
     def generate_unique_id(player_shot):

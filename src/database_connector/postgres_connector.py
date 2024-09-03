@@ -1,3 +1,5 @@
+import os
+
 import psycopg2
 from google.cloud import secretmanager
 from psycopg2 import OperationalError
@@ -13,7 +15,7 @@ class PostgresConnector:
                     host="34.136.28.192",
                     database="premier_league_stats",
                     user="bdon_db",
-                    password=ConfigUtil.get_config_value("db_pass", "database"),
+                    password=os.environ['DB_PASS'],
                     #password=PostgresConnector.get_db_pass(),
                     port=5432  # default port for PostgreSQL
                 )
