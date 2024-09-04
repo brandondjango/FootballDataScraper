@@ -15,6 +15,33 @@ class MatchStatsPage:
     def navigate_to_match_url(self, match_id):
         self.driver.get(self.url_for_match(match_id))
 
+    def match_scorebox(self):
+        return self.driver.find_element(By.CLASS_NAME, "scorebox")
+
+    def get_match_date(self):
+        match_date = self.match_scorebox().find_element(By.CLASS_NAME, "venuetime").get_attribute("data-venue-date")
+        return match_date
+
+    def get_match_competition_id(self):
+        content_div =  self.driver.find_element(By.ID, "content")
+        comp_link = content_div.find_element(By.XPATH, f"//a[contains(@href, '/comps/')]").get_attribute("href")
+        match = re.search(r'/en/comps/(\d+)/', comp_link)
+        if match:
+            competition_id = match.group(1)
+            return competition_id
+        return ""
+
+    def get_match_season(self):
+        content_div =  self.driver.find_element(By.ID, "content")
+        comp_link = (MatchStatsPage.match_scorebox(self).find_element(By.XPATH, f"//div[contains(text(), 'Matchweek')]")
+                     .find_element(By.XPATH, f"./a").get_attribute("href"))
+        print(comp_link)
+        match = re.search(r'/\d{4}-\d{4}/', comp_link)
+        if match:
+            match_season = match.group(0)
+            match_season = match_season.replace("/", "")
+            return match_season
+        return ""
 
     def get_player_stats_for_match_divs(self):
         return self.driver.find_elements(By.XPATH, f"//div[contains(@id, 'all_player_stats')]")

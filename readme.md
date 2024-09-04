@@ -6,14 +6,20 @@ The project con be run locally or on a Docker container.
 
 # Requirements
 
-Python
+Python3
 Postgres db setup
 
 # Steps to run
 
+Setup venv from project root(with python3):
+```
+python3 -m venv .
+source bin/activate
+```
+
 Install project requirements:
 
-```pip install -r requirements.txt```
+```pip3 install -r requirements.txt```
 
 Start the server:
 

@@ -1,7 +1,6 @@
 # external
 import time
 
-from selenium.webdriver.common.by import By
 
 from src.database_connector.postgres_connector import PostgresConnector
 from src.player_data.player_match_stats.player_match_stat_reader_util import PlayerMatchStatTableUtil
@@ -28,7 +27,9 @@ class MatchScraper:
             match_page.navigate_to_match_url(match_id)
 
             #todo remove
-            time.sleep(5)
+            time.sleep(1)
+
+            MatchScraper.scrape_match_details(match_id, match_page)
 
             # Scrape summary statistics on a match page
             MatchScraper.scrape_match_summary(match_id, match_page)
@@ -37,6 +38,16 @@ class MatchScraper:
             MatchScraper.scrape_match_player_shots(match_id, match_page)
         finally:
             driver.close()
+
+    @staticmethod
+    def scrape_match_details(match_id, match_page):
+        match_details = {}
+        match_details["match_id"] = match_id
+        match_details["date"] = match_page.get_match_date()
+        match_details["competition_id"] = match_page.get_match_competition_id()
+        match_details["season"] = match_page.get_match_season()
+        print(match_details)
+
 
     @staticmethod
     def scrape_match_summary(match_id, match_page):
@@ -129,3 +140,5 @@ class MatchScraper:
                 PlayerMatchStatShotTableUtil.save_player_match_shot(player_shot, postgres_connector)
         finally:
             postgres_connector.close_connection()
+
+MatchScraper.scrape_match("55fd92c7")
