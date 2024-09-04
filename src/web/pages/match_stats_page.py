@@ -35,13 +35,21 @@ class MatchStatsPage:
         content_div =  self.driver.find_element(By.ID, "content")
         comp_link = (MatchStatsPage.match_scorebox(self).find_element(By.XPATH, f"//div[contains(text(), 'Matchweek')]")
                      .find_element(By.XPATH, f"./a").get_attribute("href"))
-        print(comp_link)
+
         match = re.search(r'/\d{4}-\d{4}/', comp_link)
         if match:
             match_season = match.group(0)
             match_season = match_season.replace("/", "")
             return match_season
         return ""
+
+    def get_home_team(self):
+        home_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[0].text
+        return home_team
+
+    def get_away_team(self):
+        away_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[1].text
+        return away_team
 
     def get_player_stats_for_match_divs(self):
         return self.driver.find_elements(By.XPATH, f"//div[contains(@id, 'all_player_stats')]")

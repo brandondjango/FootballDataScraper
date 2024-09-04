@@ -3,6 +3,7 @@ import time
 
 
 from src.database_connector.postgres_connector import PostgresConnector
+from src.match_data.match_info.match_info_builder import MatchInfoTableUtil
 from src.player_data.player_match_stats.player_match_stat_reader_util import PlayerMatchStatTableUtil
 # internal
 from src.web.driver_manager.driver_manager import DriverManager
@@ -46,7 +47,19 @@ class MatchScraper:
         match_details["date"] = match_page.get_match_date()
         match_details["competition_id"] = match_page.get_match_competition_id()
         match_details["season"] = match_page.get_match_season()
-        print(match_details)
+        match_details["home_team"] = match_page.get_home_team()
+        match_details["away_team"] = match_page.get_away_team()
+
+        try:
+            postgres_connector = PostgresConnector()
+            postgres_connector.open_connection_cursor("premier_league_stats")
+
+            MatchInfoTableUtil.save_match_info(match_details, postgres_connector)
+        finally:
+            #always close connection cursor
+            postgres_connector.close_connection()
+
+
 
 
     @staticmethod
