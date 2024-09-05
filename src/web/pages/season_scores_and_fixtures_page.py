@@ -9,8 +9,8 @@ class SeasonScoresAndFixturesPage:
     def __init__(self, driver):
         self.driver = driver
 
-    def url_for_page(self, season_id = "9", season_years = "2023-2024"):
-        return "https://fbref.com/en/comps/" + season_id + "/" + season_years + "/schedule/"
+    def url_for_page(self, competition_id = "9", season_year = "2023-2024"):
+        return "https://fbref.com/en/comps/" + competition_id + "/" + season_year + "/schedule/"
 
     def wait_for_games_to_load(self):
         while(len(self.driver.find_elements(By.XPATH, f"//a[text()='Match Report']")) < 379):

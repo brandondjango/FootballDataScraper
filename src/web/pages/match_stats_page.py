@@ -51,6 +51,14 @@ class MatchStatsPage:
         away_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[1].text
         return away_team
 
+    def get_home_team_score(self):
+        home_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[0].text
+        return home_team_score
+
+    def get_away_team_score(self):
+        away_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[1].text
+        return away_team_score
+
     def get_player_stats_for_match_divs(self):
         return self.driver.find_elements(By.XPATH, f"//div[contains(@id, 'all_player_stats')]")
 

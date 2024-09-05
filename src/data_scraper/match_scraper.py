@@ -1,6 +1,7 @@
 # external
+import os
 import time
-
+from datetime import datetime
 
 from src.database_connector.postgres_connector import PostgresConnector
 from src.match_data.match_info.match_info_builder import MatchInfoTableUtil
@@ -18,18 +19,19 @@ from src.player_data.player_profile.player_profile_builder import PlayerProfileB
 class MatchScraper:
 
     @staticmethod
-    def scrape_match(match_id, driver=None):
+    def scrape_match(match_id, driver=None, postgres_connector=None):
         try:
             if (driver is None):
                 driver_manager = DriverManager()
                 driver = DriverManager.get_driver(driver_manager)
+            if(postgres_connector is None):
+                postgres_connector = PostgresConnector()
+                postgres_connector.open_connection_cursor("premier_league_stats")
 
             match_page = MatchStatsPage(driver)
             match_page.navigate_to_match_url(match_id)
 
-            #todo remove
-            time.sleep(1)
-
+            #scrape match deets
             MatchScraper.scrape_match_details(match_id, match_page)
 
             # Scrape summary statistics on a match page
@@ -39,9 +41,11 @@ class MatchScraper:
             MatchScraper.scrape_match_player_shots(match_id, match_page)
         finally:
             driver.close()
+            #always close connection cursor
+            postgres_connector.close_connection()
 
     @staticmethod
-    def scrape_match_details(match_id, match_page):
+    def scrape_match_details(match_id, match_page, postgres_connector=None):
         match_details = {}
         match_details["match_id"] = match_id
         match_details["date"] = match_page.get_match_date()
@@ -49,10 +53,13 @@ class MatchScraper:
         match_details["season"] = match_page.get_match_season()
         match_details["home_team"] = match_page.get_home_team()
         match_details["away_team"] = match_page.get_away_team()
+        match_details["home_score"] = match_page.get_home_team_score()
+        match_details["away_score"] = match_page.get_away_team_score()
 
         try:
-            postgres_connector = PostgresConnector()
-            postgres_connector.open_connection_cursor("premier_league_stats")
+            if(postgres_connector is None):
+                postgres_connector = PostgresConnector()
+                postgres_connector.open_connection_cursor("premier_league_stats")
 
             MatchInfoTableUtil.save_match_info(match_details, postgres_connector)
         finally:
@@ -63,16 +70,16 @@ class MatchScraper:
 
 
     @staticmethod
-    def scrape_match_summary(match_id, match_page):
+    def scrape_match_summary(match_id, match_page, postgres_connector=None):
         MatchScraper.save_player_profiles(match_page)
         MatchScraper.save_player_summary_stats(match_id, match_page)
 
 
     @staticmethod
-    def save_player_summary_stats(match_id, match_page):
-        #open connection + cursor before all inserts
-        postgres_connector = PostgresConnector()
-        postgres_connector.open_connection_cursor("premier_league_stats")
+    def save_player_summary_stats(match_id, match_page, postgres_connector=None):
+        if(postgres_connector is None):
+            postgres_connector = PostgresConnector()
+            postgres_connector.open_connection_cursor("premier_league_stats")
 
         try:
             # get summary stats divs
@@ -101,10 +108,11 @@ class MatchScraper:
             postgres_connector.close_connection()
 
     @staticmethod
-    def save_player_profiles(match_page):
+    def save_player_profiles(match_page, postgres_connector=None):
         #open connection + cursor before all inserts
-        postgres_connector = PostgresConnector()
-        postgres_connector.open_connection_cursor("premier_league_stats")
+        if(postgres_connector is None):
+            postgres_connector = PostgresConnector()
+            postgres_connector.open_connection_cursor("premier_league_stats")
 
         try:
             # get summary stats divs
@@ -135,7 +143,7 @@ class MatchScraper:
         print("Player Profiles Saved")
 
     @staticmethod
-    def scrape_match_player_shots(match_id, match_page):
+    def scrape_match_player_shots(match_id, match_page, postgres_connector=None):
 
         # Get shots data/table
         all_shots_div = match_page.get_all_shots_div()
@@ -143,8 +151,10 @@ class MatchScraper:
 
         # get player shots data rows
         player_match_shots_rows = match_page.get_player_shots_rows(match_player_shots_table_body)
-        postgres_connector = PostgresConnector()
-        postgres_connector.open_connection_cursor("premier_league_stats")
+        #open postgres connector if none exists
+        if(postgres_connector is None):
+            postgres_connector = PostgresConnector()
+            postgres_connector.open_connection_cursor("premier_league_stats")
         try:
             for row in player_match_shots_rows:
                 # get player shot
@@ -154,4 +164,5 @@ class MatchScraper:
         finally:
             postgres_connector.close_connection()
 
-MatchScraper.scrape_match("55fd92c7")
+#os.environ['DB_PASS'] = "MySampleThing!#"
+#MatchScraper.scrape_match("56a137f7")
