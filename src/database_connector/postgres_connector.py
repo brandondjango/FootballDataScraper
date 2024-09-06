@@ -40,7 +40,7 @@ class PostgresConnector:
             return
         self.connection.commit()
 
-    def execute_parameterized_select_query(self, db_name, query, params):
+    def execute_parameterized_select_query(self, query, params):
         try:
             self.cursor.execute(query, params)
             result = self.cursor.fetchall()  # Fetch all rows from the last executed statement

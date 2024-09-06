@@ -31,4 +31,4 @@ class MatchInfoTableUtil:
             except Exception as e:
                 print("Error inserting match_info: " + str(e))
         except Exception as e:
-            print("skipping shot because of: " + str(e))
+            print("Skipping Match info save because of: " + str(e))

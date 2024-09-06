@@ -61,7 +61,7 @@ class PlayerMatchStatShotTableUtil:
             except Exception as e:
                 print("Error inserting player_match_shot: " + str(e))
         except Exception as e:
-            print("skipping shot because of: " + str(e))
+            print("Skipping shot because of: " + str(e))
 
     @staticmethod
     def generate_unique_id(player_shot):
