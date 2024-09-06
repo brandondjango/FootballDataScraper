@@ -203,5 +203,3 @@ class MatchScraper:
 
 
 
-os.environ['DB_PASS'] = "MySampleThing!#"
-MatchScraper.scrape_match("56a137f7")

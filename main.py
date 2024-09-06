@@ -12,19 +12,33 @@ from src.database_connector.postgres_connector import PostgresConnector
 app = Flask(__name__)
 
 def scrape_individual_match(match_id, postgres_connector):
-    MatchScraper.scrape_match(match_id, postgres_connector=postgres_connector)
+    try:
+        #MatchScraper.scrape_match(match_id, postgres_connector=postgres_connector)
+        MatchScraper.scrape_match(match_id, postgres_connector)
+    except Exception as e:
+        print("Unable to import match: " + match_id + " because of \n:" + str(e))
+        return match_id
+    return None
 
 def scrape_matches_in_threads(match_ids):
     postgres_connector = PostgresConnector()
     postgres_connector.open_connection_cursor("premier_league_stats")
+    match_ids_error = []
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
         # Submit tasks to scrape each URL and write to the database
         futures = [executor.submit(scrape_individual_match, match_id, postgres_connector) for match_id in match_ids]
 
     # Wait for all tasks to complete
     for future in concurrent.futures.as_completed(futures):
-        future.result()
+        try:
+            scrape_result = future.result()
+            if scrape_result not in None:
+                match_ids_error.append(scrape_result)
+        except Exception as e:
+            print("Error in parallel: " + str(e))
+    print(match_ids_error)
+
 
 
 @app.route('/scrape_season', methods=['POST'])
