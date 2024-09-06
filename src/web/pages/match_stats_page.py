@@ -19,45 +19,65 @@ class MatchStatsPage:
         return self.driver.find_element(By.CLASS_NAME, "scorebox")
 
     def get_match_date(self):
-        match_date = self.match_scorebox().find_element(By.CLASS_NAME, "venuetime").get_attribute("data-venue-date")
-        return match_date
+        try:
+            match_date = self.match_scorebox().find_element(By.CLASS_NAME, "venuetime").get_attribute("data-venue-date")
+            return match_date
+        except Exception as e:
+            return ""
 
     def get_match_competition_id(self):
-        content_div =  self.driver.find_element(By.ID, "content")
-        comp_link = content_div.find_element(By.XPATH, f"//a[contains(@href, '/comps/')]").get_attribute("href")
-        match = re.search(r'/en/comps/(\d+)/', comp_link)
-        if match:
-            competition_id = match.group(1)
-            return competition_id
-        return ""
+        try:
+            content_div =  self.driver.find_element(By.ID, "content")
+            comp_link = content_div.find_element(By.XPATH, f"//a[contains(@href, '/comps/')]").get_attribute("href")
+            match = re.search(r'/en/comps/(\d+)/', comp_link)
+            if match:
+                competition_id = match.group(1)
+                return competition_id
+            return ""
+        except Exception as e:
+            return ""
 
     def get_match_season(self):
-        content_div =  self.driver.find_element(By.ID, "content")
-        comp_link = (MatchStatsPage.match_scorebox(self).find_element(By.XPATH, f"//div[contains(text(), 'Matchweek')]")
-                     .find_element(By.XPATH, f"./a").get_attribute("href"))
+        try:
+            comp_link = (MatchStatsPage.match_scorebox(self).find_element(By.XPATH, f"//div[contains(text(), 'Matchweek')]")
+                         .find_element(By.XPATH, f"./a").get_attribute("href"))
 
-        match = re.search(r'/\d{4}-\d{4}/', comp_link)
-        if match:
-            match_season = match.group(0)
-            match_season = match_season.replace("/", "")
-            return match_season
-        return ""
+            match = re.search(r'/\d{4}-\d{4}/', comp_link)
+            if match:
+                match_season = match.group(0)
+                match_season = match_season.replace("/", "")
+                return match_season
+            return ""
+        except Exception as e:
+            return ""
 
     def get_home_team(self):
-        home_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[0].text
-        return home_team
+        try:
+            home_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[0].text
+            return home_team
+        except Exception as e:
+            ""
 
     def get_away_team(self):
-        away_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[1].text
-        return away_team
+        try:
+            away_team = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[1].text
+            return away_team
+        except Exception as e:
+            return ""
 
     def get_home_team_score(self):
-        home_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[0].text
-        return home_team_score
+        try:
+            home_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[0].text
+            return home_team_score
+        except Exception as e:
+            return ""
 
     def get_away_team_score(self):
-        away_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[1].text
-        return away_team_score
+        try:
+            away_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[1].text
+            return away_team_score
+        except Exception as e:
+            return ""
 
     def get_player_stats_for_match_divs(self):
         return self.driver.find_elements(By.XPATH, f"//div[contains(@id, 'all_player_stats')]")

@@ -36,14 +36,16 @@ class PlayerProfileBuilder:
         except Exception as e:
             print(f"Likely Duplicate: {e}")
 
+    #bug have to insert each player individually
     @staticmethod
     def save_player_profiles(player_profiles, postgres_connector):
-        args_str = ','.join(postgres_connector.cursor.mogrify("(%s,%s)", x).decode("utf-8") for x in player_profiles)
-        query = "INSERT INTO players(player_id, player_name) VALUES " + args_str
-        try:
-            postgres_connector.execute_insert_query(query)
-        except Exception as e:
-            print(f"Likely Duplicate: {e}")
+        query = "INSERT INTO players(player_id, player_name) VALUES (%s,%s)"
+        for player in player_profiles:
+            try:
+                parameters = player
+                postgres_connector.execute_parameterized_insert_query(query, parameters)
+            except Exception as e:
+                print(f"Error inserting player profile: " + str(e))
 
 
     @staticmethod
