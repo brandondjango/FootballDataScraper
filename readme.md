@@ -68,4 +68,6 @@ If your postgres instance is hosted on Google Cloud, you'll need to add your IP 
 
 ## Sample Data:
 
-Sample SQL dump located in sample_data directory
+Sample SQL dump located in sample_data directory.
+
+![sample_screenshot.png](sample_data%2Fsample_screenshot.png))
