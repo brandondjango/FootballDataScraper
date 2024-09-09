@@ -26,9 +26,6 @@ class MatchScraper:
             if (driver is None):
                 driver_manager = DriverManager()
                 driver = DriverManager.get_driver(driver_manager)
-            if(postgres_connector is None):
-                postgres_connector = PostgresConnector()
-                postgres_connector.open_connection_cursor("premier_league_stats")
 
             match_page = MatchStatsPage(driver)
             match_page.navigate_to_match_url(match_id)
@@ -44,11 +41,12 @@ class MatchScraper:
 
             #todo add seperate status for save states
             save_success["import_status"] = MatchScraper.save_match_import_status(match_id, True, postgres_connector)
-        except:
+        except Exception as e:
             #set save status as not saved if it was never attempted
             for save_status in save_success.keys():
                 if save_success[save_status] is None:
                     save_success[save_status] = False
+            print(str(e))
             return save_success
         finally:
             driver.close()
@@ -78,6 +76,8 @@ class MatchScraper:
         except Exception as e:
             print("Failed to save match details: " + str(e))
             return False
+        finally:
+            postgres_connector.close_connection()
         return True
 
 
@@ -122,6 +122,8 @@ class MatchScraper:
         except Exception as e:
             print("Error saving shots as player summary stats: " + str(e))
             return False
+        finally:
+            postgres_connector.close_connection()
         return True
 
     @staticmethod
@@ -157,6 +159,8 @@ class MatchScraper:
         except:
             print("Error saving shots")
             return False
+        finally:
+            postgres_connector.close_connection()
         return True
 
     @staticmethod
@@ -182,6 +186,8 @@ class MatchScraper:
         except Exception as e:
             print("Error scraping player shots: " + str(e))
             return False
+        finally:
+            postgres_connector.close_connection()
         return True
 
 
@@ -189,7 +195,6 @@ class MatchScraper:
     def save_match_import_status(match_id, save_status, postgres_connector=None):
         try:
             if(postgres_connector is None):
-                was_postgres_connector_none = True
                 postgres_connector = PostgresConnector()
                 postgres_connector.open_connection_cursor("premier_league_stats")
 
@@ -199,7 +204,7 @@ class MatchScraper:
         except Exception as e:
             print(str(e))
             return False
+        finally:
+            postgres_connector.close_connection()
         return True
-
-
 

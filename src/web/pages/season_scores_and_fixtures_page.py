@@ -18,7 +18,6 @@ class SeasonScoresAndFixturesPage:
 
     def fetch_season_game_ids(self):
         match_tds = self.driver.find_elements(By.XPATH, f"//a[text()='Match Report']")
-        print(len(match_tds))
 
         matches = []
 

@@ -14,11 +14,11 @@ app = Flask(__name__)
 def scrape_individual_match(match_id, postgres_connector):
     try:
         #MatchScraper.scrape_match(match_id, postgres_connector=postgres_connector)
-        MatchScraper.scrape_match(match_id, postgres_connector)
+        MatchScraper.scrape_match(match_id)
     except Exception as e:
         print("Unable to import match: " + match_id + " because of \n:" + str(e))
         return match_id
-    return None
+    #return None
 
 def scrape_matches_in_threads(match_ids):
     postgres_connector = PostgresConnector()
@@ -32,9 +32,7 @@ def scrape_matches_in_threads(match_ids):
     # Wait for all tasks to complete
     for future in concurrent.futures.as_completed(futures):
         try:
-            scrape_result = future.result()
-            if scrape_result not in None:
-                match_ids_error.append(scrape_result)
+            future.result()
         except Exception as e:
             print("Error in parallel: " + str(e))
     print(match_ids_error)
@@ -50,7 +48,21 @@ def scrape_season():
     season = data.get("season")
     match_ids = MatchFetcher.fetch_matches_from_season_scores_and_fixtures_page(comp_id, season)
 
+    #todo get this check in a function
+    #remove matches already imported:
+    postgres_connector = PostgresConnector()
+    postgres_connector.open_connection_cursor("premier_league_stats")
+    query = "select match_id from match_imported_status where match_imported = true"
+    parameters = ()
+
+    imported_matches = postgres_connector.execute_parameterized_select_query(query, parameters)
+    for match in imported_matches:
+        match_ids.remove(match[0])
+
+
+    #get matches
     scrape_matches_in_threads(match_ids)
+
     response = {
         "Start": "ok"
     }

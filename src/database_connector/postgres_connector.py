@@ -44,12 +44,12 @@ class PostgresConnector:
         try:
             self.cursor.execute(query, params)
             result = self.cursor.fetchall()  # Fetch all rows from the last executed statement
-            self.cursor.close()
             return result
         except OperationalError as e:
-            self.cursor.close()
+            self.connection.rollback()
             print(f"The error '{e}' occurred")
             return None
+        self.connection.commit()
 
     def execute_parameterized_insert_query(self, query, params):
         try:
