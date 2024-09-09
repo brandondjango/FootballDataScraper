@@ -12,6 +12,7 @@ from src.database_connector.postgres_connector import PostgresConnector
 app = Flask(__name__)
 
 def scrape_individual_match(match_id, postgres_connector):
+    #todo add retry loging for import retrying. Imports don't always outright fail, you need to spot check if data was actually imported
     try:
         #MatchScraper.scrape_match(match_id, postgres_connector=postgres_connector)
         MatchScraper.scrape_match(match_id)

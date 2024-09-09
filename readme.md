@@ -40,6 +40,17 @@ curl --location --request GET 'https://0.0.0.0:8080/scrape_match' \
 --data '{"match_id" : "Insert match id"}'
 ```
 
+Scrape a season where competition_id is the id of the competition(premier league, mls, etc.) and the season is the year of data you want to collect:
+Premier league:
+``` 
+curl --location 'http://0.0.0.0:8080/scrape_season' \
+--header 'Content-Type: application/json' \
+--data '{
+    "competition_id" : "9",
+    "season": "2023-2024"
+}'
+```
+
 ## Driver support
 
 This project uses a browser to scrape data from fbref.com/. In the container, currently it is neccessary specify the browser version.
@@ -54,3 +65,7 @@ Latest drivers can be found here: https://googlechromelabs.github.io/chrome-for-
 ## Connect to Google postgres instance
 
 If your postgres instance is hosted on Google Cloud, you'll need to add your IP address to Google Cloud SQL -> Connections -> Networking -> Authorized Networks
+
+## Sample Data:
+
+Sample SQL dump located in sample_data directory
