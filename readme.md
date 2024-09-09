@@ -2,12 +2,12 @@
 
 Purpose of this personal project is to grab football(soccer) statistics and store them in a database for use as a data set for an AI to learn.
 
-The project con be run locally or on a Docker container.
+The project can be run locally or on a Docker container.
 
 # Requirements
 
-Python3
-Postgres db setup
+- Python3
+- Postgres db setup
 
 # Steps to run
 
@@ -62,7 +62,7 @@ Latest stable chrome versions can be found here: https://chromereleases.googlebl
 Latest drivers can be found here: https://googlechromelabs.github.io/chrome-for-testing/
 
 
-## Connect to Google postgres instance
+## Connecting to Google postgres instance
 
 If your postgres instance is hosted on Google Cloud, you'll need to add your IP address to Google Cloud SQL -> Connections -> Networking -> Authorized Networks
 
