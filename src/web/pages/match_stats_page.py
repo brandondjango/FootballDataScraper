@@ -8,6 +8,8 @@ class MatchStatsPage:
     def __init__(self, webdriver):
         self.driver = webdriver
 
+    def url_for_page(self):
+        return self.driver.current_url
     @staticmethod
     def url_for_match(match_id):
         return 'https://fbref.com/en/matches/' + match_id

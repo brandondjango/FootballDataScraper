@@ -1,7 +1,5 @@
 # external
-import os
-import time
-from datetime import datetime
+import logging
 
 from src.database_connector.postgres_connector import PostgresConnector
 from src.match_data.match_info.match_info_builder import MatchInfoTableUtil
@@ -46,8 +44,8 @@ class MatchScraper:
             for save_status in save_success.keys():
                 if save_success[save_status] is None:
                     save_success[save_status] = False
-            print(str(e))
-            return save_success
+
+            logging.exception(save_success)
         finally:
             driver.close()
 
@@ -74,7 +72,7 @@ class MatchScraper:
 
             MatchInfoTableUtil.save_match_info(match_details, postgres_connector)
         except Exception as e:
-            print("Failed to save match details: " + str(e))
+            logging("Failed to save match details")
             return False
         finally:
             postgres_connector.close_connection()
@@ -120,7 +118,7 @@ class MatchScraper:
 
 
         except Exception as e:
-            print("Error saving shots as player summary stats: " + str(e))
+            logging("Error saving player summary stats for match id: " + match_id)
             return False
         finally:
             postgres_connector.close_connection()
@@ -157,7 +155,7 @@ class MatchScraper:
                 #save profiles to db
                 PlayerProfileBuilder.save_player_profiles(players, postgres_connector)
         except:
-            print("Error saving shots")
+            logging("Error saving player profiles on " + match_page.url_for_page())
             return False
         finally:
             postgres_connector.close_connection()
@@ -184,7 +182,7 @@ class MatchScraper:
                 # save player shot
                 PlayerMatchStatShotTableUtil.save_player_match_shot(player_shot, postgres_connector)
         except Exception as e:
-            print("Error scraping player shots: " + str(e))
+            logging("Error scraping player shots for match id: " + match_id)
             return False
         finally:
             postgres_connector.close_connection()
@@ -202,7 +200,7 @@ class MatchScraper:
             parameters = ()
             postgres_connector.execute_parameterized_insert_query(query, parameters)
         except Exception as e:
-            print(str(e))
+            logging(e)
             return False
         finally:
             postgres_connector.close_connection()
