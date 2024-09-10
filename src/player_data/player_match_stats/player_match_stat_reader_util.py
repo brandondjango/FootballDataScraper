@@ -1,5 +1,6 @@
 from src.web.pages.match_stats_page import MatchStatsPage
 from src.database_connector.postgres_connector import PostgresConnector
+import logging
 
 
 class PlayerMatchStatTableUtil:
@@ -53,6 +54,32 @@ class PlayerMatchStatTableUtil:
             postgres_connector.execute_parameterized_insert_query(query, parameters)
         except Exception as e:
             print("Could not insert because: " + str(e))
+
+    @staticmethod
+    def save_substitute_info_to_match_summary(match_id, substitute_array, postgres_connector):
+        try:
+            for sub_tuple in substitute_array:
+                print(sub_tuple)
+                sub_minute = sub_tuple[0]
+                subbed_on_player = sub_tuple[1]
+                subbed_off_player = sub_tuple[2]
+
+
+                subbed_on_query = "UPDATE public.match_summary_stats SET subbed_on = (%s) WHERE match_id = (%s) and player_id = (%s);"
+                subbed_on_parameters = (sub_minute, match_id, subbed_on_player)
+
+                subbed_off_query = "UPDATE public.match_summary_stats SET subbed_off = (%s) WHERE match_id = (%s) and player_id = (%s);"
+                subbed_off_parameters = (sub_minute, match_id, subbed_off_player)
+
+                try:
+                    postgres_connector.execute_parameterized_insert_query(subbed_on_query, subbed_on_parameters)
+                    postgres_connector.execute_parameterized_insert_query(subbed_off_query, subbed_off_parameters)
+                except Exception as e:
+                    logging("Could not insert substitution tuple: " + str(e))
+        except Exception as e:
+            logging("Could not insert substitution information: " + str(e))
+
+
 
 
 

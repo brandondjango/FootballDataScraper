@@ -1,6 +1,9 @@
 import selenium
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
 import re
+
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class MatchStatsPage:
@@ -132,5 +135,63 @@ class MatchStatsPage:
     def get_player_shots_table_body(self, all_player_stat_div):
         return all_player_stat_div.find_element(By.XPATH, f".//tbody")
 
-    def get_player_shots_rows(selfself, tbody):
+    def get_player_shots_rows(self, tbody):
         return tbody.find_elements(By.XPATH, f".//tr[not(contains(@class, 'spacer'))]")
+
+    def get_match_events(self):
+        return self.driver.find_element(By.ID, "events_wrap").find_elements(By.CLASS_NAME, "event")
+
+    def extract_minute(self, text):
+        # First try to match the "number+number" pattern (e.g., "90+5")
+        match = re.search(r'(\d+)\+(\d+)', text)
+
+        if match:
+            # If found, return the "number+number" as a tuple or combined string
+            return f"{match.group(1)}+{match.group(2)}"
+
+        # If not found, fall back to matching the simple number pattern (e.g., "83")
+        match = re.search(r'(\d+)', text)
+
+        if match:
+            return match.group(1)
+
+        # If no match is found, return None
+        return None
+
+    def extract_player_id(self, text):
+        # Use regex to find the text between "/players/" and the next "/"
+        match = re.search(r'/players/([^/]+)/', text)
+
+        if match:
+            return match.group(1)  # Return the matched group (the player ID)
+        return None
+
+    def substitute_events(self):
+        events_parent_div = self.driver.find_element(By.ID, "events_wrap")
+        substitute_divs = []
+        for event in events_parent_div.find_elements(By.CLASS_NAME, "substitute_in"):
+            substitute_divs.append(event.find_element(By.XPATH, "./../.."))
+
+        return substitute_divs
+
+    def get_sub_player_ids(self, event):
+        links = event.find_elements(By.XPATH, ".//a")
+        player_id_tuple = ()
+        for a in links:
+            player_id_tuple = player_id_tuple + (self.extract_player_id(a.get_attribute("href")),)
+        return player_id_tuple
+
+    def get_substitute_info(self):
+        sub_array = []
+        for event in self.substitute_events():
+            sub_tuple_minute = (self.extract_minute(event.text),)
+            sub_tuple_player_ids = (self.get_sub_player_ids(event))
+            sub_tuple = sub_tuple_minute + sub_tuple_player_ids
+            sub_array.append(sub_tuple)
+        print(sub_array)
+        return sub_array
+
+
+
+
+

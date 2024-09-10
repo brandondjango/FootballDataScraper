@@ -1,5 +1,7 @@
 # external
 import logging
+import os
+import time
 
 from src.database_connector.postgres_connector import PostgresConnector
 from src.match_data.match_info.match_info_builder import MatchInfoTableUtil
@@ -115,6 +117,10 @@ class MatchScraper:
                     # build profiles
                     player_summary = PlayerMatchStatTableUtil.get_summary_match_stats_for_player(row, match_page, match_id)
                     PlayerMatchStatTableUtil.save_match_summary_stats(player_summary, postgres_connector)
+
+            #get substitute information
+            subsitution_info_array = match_page.get_substitute_info()
+            PlayerMatchStatTableUtil.save_substitute_info_to_match_summary(match_id, subsitution_info_array, postgres_connector)
 
 
         except Exception as e:
