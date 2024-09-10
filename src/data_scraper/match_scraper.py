@@ -88,7 +88,21 @@ class MatchScraper:
     def scrape_match_summary(match_id, match_page, postgres_connector=None):
         MatchScraper.save_player_profiles(match_page, postgres_connector)
         MatchScraper.save_player_summary_stats(match_id, match_page, postgres_connector)
+        MatchScraper.save_substitutions_in_summary_stats(match_id, match_page, postgres_connector)
 
+
+    @staticmethod
+    def save_substitutions_in_summary_stats(match_id, match_page, postgres_connector=None):
+        if(postgres_connector is None):
+            was_postgres_connector_none = True
+            postgres_connector = PostgresConnector()
+            postgres_connector.open_connection_cursor("premier_league_stats")
+        try:
+            #get substitute information
+            subsitution_info_array = match_page.get_substitute_info()
+            PlayerMatchStatTableUtil.save_substitute_info_to_match_summary(match_id, subsitution_info_array, postgres_connector)
+        except Exception as e:
+            logging("Error saving substitutions: " + str(e))
 
     @staticmethod
     def save_player_summary_stats(match_id, match_page, postgres_connector=None):
@@ -117,11 +131,6 @@ class MatchScraper:
                     # build profiles
                     player_summary = PlayerMatchStatTableUtil.get_summary_match_stats_for_player(row, match_page, match_id)
                     PlayerMatchStatTableUtil.save_match_summary_stats(player_summary, postgres_connector)
-
-            #get substitute information
-            subsitution_info_array = match_page.get_substitute_info()
-            PlayerMatchStatTableUtil.save_substitute_info_to_match_summary(match_id, subsitution_info_array, postgres_connector)
-
 
         except Exception as e:
             logging("Error saving player summary stats for match id: " + match_id)
