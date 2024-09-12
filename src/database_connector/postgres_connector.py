@@ -45,7 +45,7 @@ class PostgresConnector:
             self.cursor.execute(query, params)
             result = self.cursor.fetchall()  # Fetch all rows from the last executed statement
             return result
-        except OperationalError as e:
+        except Exception as e:
             self.connection.rollback()
             print(f"The error '{e}' occurred")
             return None
@@ -55,10 +55,11 @@ class PostgresConnector:
         try:
             self.cursor.execute(query, params)
             self.connection.commit()
-        except OperationalError as e:
+        except Exception as e:
             self.connection.rollback()
             print(f"The error '{e}' occurred")
-            return
+        finally:
+            return self
 
 
     def execute_many_parameterized_insert_query(self, query, data_array):
