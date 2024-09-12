@@ -1,5 +1,6 @@
 import os
 import concurrent.futures
+import logging
 
 from flask import Flask, request, jsonify, Response
 
@@ -11,24 +12,24 @@ from src.database_connector.postgres_connector import PostgresConnector
 
 app = Flask(__name__)
 
-def scrape_individual_match(match_id, postgres_connector):
+def scrape_individual_match(match_id, jobs, postgres_connector):
     #todo add retry loging for import retrying. Imports don't always outright fail, you need to spot check if data was actually imported
     try:
-        #MatchScraper.scrape_match(match_id, postgres_connector=postgres_connector)
-        MatchScraper.scrape_match(match_id)
+        print("start scraping")
+        MatchScraper.scrape_match(match_id, jobs)
     except Exception as e:
         print("Unable to import match: " + match_id + " because of \n:" + str(e))
         return match_id
     #return None
 
-def scrape_matches_in_threads(match_ids):
+def scrape_matches_in_threads(match_ids, jobs):
     postgres_connector = PostgresConnector()
     postgres_connector.open_connection_cursor("premier_league_stats")
     match_ids_error = []
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         # Submit tasks to scrape each URL and write to the database
-        futures = [executor.submit(scrape_individual_match, match_id, postgres_connector) for match_id in match_ids]
+        futures = [executor.submit(scrape_individual_match, match_id, jobs, postgres_connector) for match_id in match_ids]
 
     # Wait for all tasks to complete
     for future in concurrent.futures.as_completed(futures):
@@ -40,29 +41,43 @@ def scrape_matches_in_threads(match_ids):
 
 
 
-@app.route('/scrape_season', methods=['POST'])
+@app.route('/fetch/scrape_season', methods=['POST'])
 def scrape_season():
     data = request.json
-
-
     comp_id = data.get("competition_id")
     season = data.get("season")
+
+    #ignore previously imported matches
+    force_all = data.get("force_all")
+
+    #jobs to run
+    jobs = data.get("jobs")
+
+
     match_ids = MatchFetcher.fetch_matches_from_season_scores_and_fixtures_page(comp_id, season)
+    print("Number of total matches found: " + str(match_ids))
+
 
     #todo get this check in a function
-    #remove matches already imported:
-    postgres_connector = PostgresConnector()
-    postgres_connector.open_connection_cursor("premier_league_stats")
-    query = "select match_id from match_imported_status where match_imported = true"
-    parameters = ()
-
-    imported_matches = postgres_connector.execute_parameterized_select_query(query, parameters)
-    for match in imported_matches:
-        match_ids.remove(match[0])
+    #ignore previously imported matches
+    if force_all == False:
+        try:
+            #remove matches already imported:
+            postgres_connector = PostgresConnector()
+            postgres_connector.open_connection_cursor("premier_league_stats")
+            query = "select match_id from match_imported_status where match_imported = true"
+            parameters = ()
+            imported_matches = postgres_connector.execute_parameterized_select_query(query, parameters)
+            for match in imported_matches:
+               match_ids.remove(match[0])
+        except Exception as e:
+            logging("Error removing previously imported matches:" + str(e))
+        finally:
+            postgres_connector.close_connection()
 
 
     #get matches
-    scrape_matches_in_threads(match_ids)
+    scrape_matches_in_threads(match_ids, jobs)
 
     response = {
         "Start": "ok"
@@ -70,9 +85,11 @@ def scrape_season():
     return jsonify(response), 200
 
 
-@app.route('/scrape_match', methods=['POST'])
+@app.route('/fetch/scrape_match', methods=['POST'])
 def scrape_match():
     data = request.json
+    #jobs to run
+    jobs = data.get("jobs")
 
     if data.get("match_id") is None:
         response = {
@@ -83,7 +100,7 @@ def scrape_match():
 
     match_id = data.get("match_id")
 
-    MatchScraper.scrape_match(match_id)
+    MatchScraper.scrape_match(match_id, jobs)
 
     # Process the data as needed
     response = {
