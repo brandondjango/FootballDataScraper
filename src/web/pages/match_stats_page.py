@@ -188,7 +188,6 @@ class MatchStatsPage:
             sub_tuple_player_ids = (self.get_sub_player_ids(event))
             sub_tuple = sub_tuple_minute + sub_tuple_player_ids
             sub_array.append(sub_tuple)
-        print(sub_array)
         return sub_array
 
 
