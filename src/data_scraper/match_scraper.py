@@ -19,7 +19,7 @@ from src.player_data.player_profile.player_profile_builder import PlayerProfileB
 class MatchScraper:
 
     @staticmethod
-    def scrape_match(match_id, driver=None, postgres_connector=None):
+    def scrape_match(match_id, jobs=None, driver=None, postgres_connector=None):
         #store status of each saving of statistics
         save_success = {}
         try:
@@ -30,17 +30,29 @@ class MatchScraper:
             match_page = MatchStatsPage(driver)
             match_page.navigate_to_match_url(match_id)
 
-            #scrape match deets
-            save_success["match_details"] = MatchScraper.scrape_match_details(match_id, match_page, postgres_connector)
+            if "match_details" in jobs or "all" in jobs:
+                print("Saving match details.")
+                #scrape match deets
+                save_success["match_details"] = MatchScraper.scrape_match_details(match_id, match_page, postgres_connector)
 
-            # Scrape summary statistics on a match page
-            save_success["match_summary"] = MatchScraper.scrape_match_summary(match_id, match_page, postgres_connector)
+            if "match_summary" in jobs or "all" in jobs:
+                print("Saving match summary stats.")
+                # Scrape summary statistics on a match page
+                save_success["match_summary"] = MatchScraper.scrape_match_summary(match_id, match_page, postgres_connector)
 
-            # Scrape player shot statistics on a match page
-            save_success["player_shots"] = MatchScraper.scrape_match_player_shots(match_id, match_page, postgres_connector)
+            if "match_player_shots" in jobs or "all" in jobs:
+                print("Saving match player shots.")
+                # Scrape player shot statistics on a match page
+                save_success["player_shots"] = MatchScraper.scrape_match_player_shots(match_id, match_page, postgres_connector)
 
-            #todo add seperate status for save states
-            save_success["import_status"] = MatchScraper.save_match_import_status(match_id, True, postgres_connector)
+            if "match_player_subs" in jobs or "all" in jobs:
+                print("Saving match player subs.")
+                # Scrape player shot statistics on a match page
+                save_success["player_subs"] = MatchScraper.save_substitutions_in_summary_stats(match_id, match_page, postgres_connector)
+
+            if "all" in jobs:
+                #todo add seperate status for save states
+                save_success["import_status"] = MatchScraper.save_match_import_status(match_id, True, postgres_connector)
         except Exception as e:
             #set save status as not saved if it was never attempted
             for save_status in save_success.keys():
