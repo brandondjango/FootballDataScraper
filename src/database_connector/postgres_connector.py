@@ -54,20 +54,22 @@ class PostgresConnector:
     def execute_parameterized_insert_query(self, query, params):
         try:
             self.cursor.execute(query, params)
+            self.connection.commit()
         except OperationalError as e:
             self.connection.rollback()
             print(f"The error '{e}' occurred")
             return
-        self.connection.commit()
+
 
     def execute_many_parameterized_insert_query(self, query, data_array):
         try:
             self.cursor.executemany(query, data_array)
+            self.connection.commit()
         except OperationalError as e:
             self.connection.rollback()
             print(f"The error '{e}' occurred")
             return
-        self.connection.commit()
+
 
     def insert_into_keys_table(self, key_name, key_value):
         self.execute_parameterized_insert_query("keys",
