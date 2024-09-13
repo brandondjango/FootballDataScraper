@@ -28,10 +28,14 @@ class SquadSeasonPage:
         return self.standard_stats_table().find_element(By.XPATH, ".//tbody")
 
     def get_player_table_rows_for_standard_stats(self):
-        return self.table_body_for_standard_stats().find_elements(By.XPATH, ".//tr")
+        cells = self.table_body_for_standard_stats().find_elements(By.XPATH, f".//th[@data-stat='player']")
+        rows = []
+        for cell in cells:
+            rows.append(cell.find_element(By.XPATH, ".."))
+        return rows
 
     def get_player_row_data_stat_text(self, tr, stat_name):
-        return tr.find_element(By.XPATH, f".//th[contains(@data-stat, '" + stat_name + "')]").text.lstrip()
+        return tr.find_element(By.XPATH, f".//th[@data-stat='" + stat_name + "']").text.lstrip()
 
     def get_summary_player_row_data_stat_id(self, tr):
         return tr.find_element(By.XPATH, f".//th").get_attribute("data-append-csv")

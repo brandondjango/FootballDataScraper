@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 
 from src.database_connector.postgres_connector import PostgresConnector
 from src.player_data.player_profile.player_profile_builder import PlayerProfileBuilder
@@ -10,7 +11,7 @@ from src.web.pages.squad_season_page import SquadSeasonPage
 class SquadSeasonScraper:
 
     @staticmethod
-    def scrape_squad_players(driver=None, squad_id="b8fd03ef", season="2023-2024"):
+    def scrape_squad_players(squad_id="b8fd03ef", season="2023-2024", driver=None):
 
         try:
             if (driver is None):
@@ -18,14 +19,11 @@ class SquadSeasonScraper:
                 driver = DriverManager.get_driver(driver_manager)
 
             squad_page = SquadSeasonPage(driver)
-            print(squad_page.url_for_match(squad_id, season))
             squad_page.navigate_to_match_url(squad_id, season)
-
             SquadSeasonScraper.save_player_profiles(squad_page)
-
-
         except Exception as e:
-            logging.log(lvl=0,msg=str(e))
+            print(str(e))
+            #logging.log(level=0,message=str(e))
         finally:
             driver.close()
 
@@ -50,12 +48,9 @@ class SquadSeasonScraper:
             #save profiles to db
             postgres_connector = PlayerProfileBuilder.save_player_profiles(players, postgres_connector)
         except Exception as e:
-            logging.log("Error saving player profiles on " + squad_page.url_for_page() + "\n" + str(e))
+            print(str(e))
+            #logging.log("Error saving player profiles on " + squad_page.url_for_page() + "\n" + str(e))
             return False
         finally:
             postgres_connector.close_connection()
         return True
-
-
-os.environ['DB_PASS'] = "MySampleThing!#"
-SquadSeasonScraper.scrape_squad_players()

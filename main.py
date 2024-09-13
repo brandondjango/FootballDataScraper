@@ -8,6 +8,8 @@ from src.data_scraper.match_fetcher import MatchFetcher
 from src.data_scraper.match_scraper import MatchScraper
 from datetime import datetime
 
+from src.data_scraper.squad_fetcher import SquadFetcher
+from src.data_scraper.squad_season_scraper import SquadSeasonScraper
 from src.database_connector.postgres_connector import PostgresConnector
 
 app = Flask(__name__)
@@ -108,6 +110,31 @@ def scrape_match():
         'message': "Scraped match with id: " + match_id
     }
     return jsonify(response), 200
+
+@app.route('/fetch/scrape_season_squads', methods=['POST'])
+def scrape_season_squads():
+    data = request.json
+    #jobs to run
+    competition_id = data.get("competition_id")
+    season = data.get("season")
+    team_squad_tuples = SquadFetcher.fetch_season_squads(competition_id, season)
+
+    for tuple in team_squad_tuples:
+        try:
+            squad_id = tuple[0]
+            SquadSeasonScraper.scrape_squad_players(squad_id=squad_id , season=season)
+        except Exception as e:
+            print("Error saving squad " + squad_id + " from season " + season)
+            print(str(e))
+            #logging.log(level=1, message="Error saving squad " + squad_id + " from season " + season)
+
+    response = {
+        'status': 'success',
+        'message': "Scraped squads with ids: " + str(team_squad_tuples)
+    }
+    return jsonify(response), 200
+
+
 
 @app.route('/db_setup', methods=['POST'])
 def db_setup_endpoint():
