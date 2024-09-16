@@ -7,9 +7,23 @@ The project can be run locally or on a Docker container.
 # Requirements
 
 - Python3
-- Postgres db setup
+- Postgres db setup(psql)
 
 # Steps to run
+
+## Database setup:
+
+First, you'll need to set up your db with the schema located at [premier_league_stats_9-16-24_schema.sql](schemas%2Fpremier_league_stats_9-16-24_schema.sql)
+
+You can do this by running a command like:
+
+``` 
+psql -d premier_league_stats -f schemas/premier_league_stats_9-16-24_schema.sql
+```
+
+If you want existing data that has already been scraped, use [Premier_leage_data2023-2024.sql](sample_data%2FPremier_leage_data2023-2024.sql)
+
+## Python libraries
 
 Setup venv from project root(with python3):
 ```
@@ -20,6 +34,8 @@ source bin/activate
 Install project requirements:
 
 ```pip3 install -r requirements.txt```
+
+# Start Football Scraper API
 
 Start the server:
 
