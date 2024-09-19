@@ -9,6 +9,8 @@
   - Do this in football scraper or data processor repo?
   
 - Add scrape by player matches
+- Manually add managers table+values
+- Add managers to 11s?
 - Add tests
 
 # Forward
