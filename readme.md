@@ -87,3 +87,37 @@ If your postgres instance is hosted on Google Cloud, you'll need to add your IP 
 Sample SQL dump located in sample_data directory.
 
 ![sample_screenshot.png](sample_data%2Fsample_screenshot.png))
+
+## Table Descriptions
+
+Derived data means data that was derived from other tables as opposed to scraped.
+
+### match_imported_status
+
+Contains derived data: No.
+
+Describes if an import has been attempted at the [match_scraper.py](src%2Fdata_scraper%2Fmatch_scraper.py) level.
+
+### match_info
+
+Contains derived data: No.
+
+Details of the match: date, score, venue, competition, etc.
+
+### match_shots_stats
+
+Contains derived data: Yes, sca1_player_id, sca2_player_id.
+
+Details on the shots that occured in the match, including player shooting, outcome, other player involvements, etc.
+
+### match_summary_stats
+
+Contains derived data: No.
+
+Summary of stats for a player in a match.
+
+### players
+
+Contains derived data: No.
+
+Just a mapping of player_name to player_id

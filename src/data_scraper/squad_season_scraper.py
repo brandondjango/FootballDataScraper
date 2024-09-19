@@ -54,3 +54,6 @@ class SquadSeasonScraper:
         finally:
             postgres_connector.close_connection()
         return True
+
+os.environ['DB_PASS'] = "MySampleThing!#"
+SquadSeasonScraper.scrape_squad_players(squad_id="7c21e445", season="2023-2024")
