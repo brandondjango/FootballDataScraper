@@ -1,5 +1,17 @@
 # Football Data Scraper API
 
+# Current to do:
+
+- Rerun match summary to get team_id and substitution
+- create "11s" profiles
+  - offensive
+  - defensive
+  - Do this in football scraper or data processor repo?
+  
+- Add scrape by player matches
+
+# Forward
+
 Purpose of this personal project is to grab football(soccer) statistics and store them in a database for use as a data set for an AI to learn.
 
 The project can be run locally or on a Docker container.
