@@ -9,6 +9,7 @@
   - Do this in football scraper or data processor repo?
   
 - Add scrape by player matches
+- Add tests
 
 # Forward
 
