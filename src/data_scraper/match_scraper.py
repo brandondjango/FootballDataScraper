@@ -129,8 +129,12 @@ class MatchScraper:
             match_player_stats_divs = match_page.get_player_stats_for_match_divs()
 
             # loop through summary rows for both teams
-            for div in match_player_stats_divs:
+            for index, div in enumerate(match_player_stats_divs):
                 player_summary_stats = []
+                if index == 0:
+                    match_squad = match_page.get_home_team_id()
+                if index == 1:
+                    match_squad = match_page.get_away_team_id()
 
                 # Get summary stats of match table
                 match_player_summary_table_body = match_page.get_summary_stats_table_body(div)
@@ -142,6 +146,7 @@ class MatchScraper:
                 for row in player_summary_rows:
                     # build profiles
                     player_summary = PlayerMatchStatTableUtil.get_summary_match_stats_for_player(row, match_page, match_id)
+                    player_summary["team_id"] = match_squad
                     PlayerMatchStatTableUtil.save_match_summary_stats(player_summary, postgres_connector)
 
         except Exception as e:
@@ -163,8 +168,10 @@ class MatchScraper:
             match_player_stats_divs = match_page.get_player_stats_for_match_divs()
 
             # loop through summary rows for both teams
-            for div in match_player_stats_divs:
+            for index, div in enumerate(match_player_stats_divs):
                 players = []
+                if index == 0:
+                    squad_id = match_page.get_home_team()
 
                 # Get summary stats of match table
                 match_player_summary_table_body = match_page.get_summary_stats_table_body(div)

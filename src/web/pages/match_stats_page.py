@@ -70,6 +70,25 @@ class MatchStatsPage:
         except Exception as e:
             return ""
 
+    def get_home_team_id(self):
+        try:
+            home_team_link = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[0].get_attribute("href")
+            return self.extract_squad_id(home_team_link)
+        except Exception as e:
+            ""
+
+    def get_away_team_id(self):
+        try:
+            away_team_link = self.match_scorebox().find_elements(By.XPATH, f".//a[contains(@href, 'squads')]")[1].get_attribute("href")
+            return self.extract_squad_id(away_team_link)
+        except Exception as e:
+            return ""
+
+    def extract_squad_id(self, team_link):
+        # Use regex to find the text between "/squads/" and the next "/"
+        match = re.search(r'/squads/([^/]+)/', team_link)
+        return match.group(1)
+
     def get_home_team_score(self):
         try:
             home_team_score = self.match_scorebox().find_elements(By.CLASS_NAME, "score")[0].text
