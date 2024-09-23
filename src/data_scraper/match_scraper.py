@@ -1,5 +1,6 @@
 # external
 import logging
+from selenium import webdriver
 import os
 import time
 
@@ -19,7 +20,7 @@ from src.player_data.player_profile.player_profile_builder import PlayerProfileB
 class MatchScraper:
 
     @staticmethod
-    def scrape_match(match_id, jobs=None, driver=None, postgres_connector=None):
+    def scrape_match(match_id: str, jobs: [] = None, driver: webdriver=None, postgres_connector: PostgresConnector=None):
         #store status of each saving of statistics
         save_success = {}
         try:
@@ -67,7 +68,7 @@ class MatchScraper:
         #return save_success
 
     @staticmethod
-    def scrape_match_details(match_id, match_page, postgres_connector=None):
+    def scrape_match_details(match_id: str, match_page: MatchStatsPage, postgres_connector: PostgresConnector=None):
         try:
             match_details = {}
             match_details["match_id"] = match_id
@@ -97,7 +98,7 @@ class MatchScraper:
 
 
     @staticmethod
-    def scrape_match_summary(match_id, match_page, postgres_connector=None):
+    def scrape_match_summary(match_id: str, match_page: MatchStatsPage, postgres_connector: PostgresConnector=None):
         MatchScraper.save_player_profiles(match_page, postgres_connector)
         MatchScraper.save_player_summary_stats(match_id, match_page, postgres_connector)
         MatchScraper.save_substitutions_in_summary_stats(match_id, match_page, postgres_connector)
@@ -117,7 +118,7 @@ class MatchScraper:
             logging("Error saving substitutions: " + str(e))
 
     @staticmethod
-    def save_player_summary_stats(match_id, match_page, postgres_connector=None):
+    def save_player_summary_stats(match_id: str, match_page: MatchStatsPage, postgres_connector: PostgresConnector=None):
         was_postgres_connector_none = False
         if(postgres_connector is None):
             was_postgres_connector_none = True
@@ -157,7 +158,7 @@ class MatchScraper:
         return True
 
     @staticmethod
-    def save_player_profiles(match_page, postgres_connector=None):
+    def save_player_profiles(match_page: MatchStatsPage, postgres_connector: PostgresConnector=None):
         #open connection + cursor before all inserts
         if(postgres_connector is None):
             postgres_connector = PostgresConnector()
@@ -196,7 +197,7 @@ class MatchScraper:
         return True
 
     @staticmethod
-    def scrape_match_player_shots(match_id, match_page, postgres_connector=None):
+    def scrape_match_player_shots(match_id: str, match_page: MatchStatsPage, postgres_connector: PostgresConnector=None):
         # Get shots data/table
         all_shots_div = match_page.get_all_shots_div()
         match_player_shots_table_body = match_page.get_player_shots_table_body(all_shots_div)
@@ -224,7 +225,7 @@ class MatchScraper:
 
 
     @staticmethod
-    def save_match_import_status(match_id, save_status, postgres_connector=None):
+    def save_match_import_status(match_id: str, save_status, postgres_connector: PostgresConnector=None):
         try:
             if(postgres_connector is None):
                 postgres_connector = PostgresConnector()

@@ -1,5 +1,7 @@
 # Football Data Scraper API
 
+This is the data scraper component, the other components will include a data processor and then the trainer.
+
 # Current to do:
 
 - Rerun match summary to get team_id and substitution
