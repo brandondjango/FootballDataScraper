@@ -1,6 +1,6 @@
 # Football Data Scraper API
 
-This is the data scraper component, the other components will include a data processor and then the trainer.
+This is the data scraper component, the other components will include a [data processor](https://github.com/brandondjango/FootballDataProcessor) and then the trainer.
 
 # Current to do:
 
