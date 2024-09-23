@@ -2,7 +2,7 @@ import os
 
 import selenium
 
-
+from selenium import webdriver
 from src.web.driver_manager.driver_manager import DriverManager
 from src.web.pages.season_overview_page import SeasonOverviewPage
 
@@ -10,7 +10,7 @@ from src.web.pages.season_overview_page import SeasonOverviewPage
 class SquadFetcher:
 
     @staticmethod
-    def fetch_season_squads(comp_id, season, driver=None):
+    def fetch_season_squads(comp_id: str, season: str, driver: webdriver=None):
         try:
             if (driver is None):
                 driver_manager = DriverManager()

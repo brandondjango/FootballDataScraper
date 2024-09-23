@@ -4,7 +4,7 @@ from src.database_connector.postgres_connector import PostgresConnector
 class MatchImportStatusTableUtil:
 
     @staticmethod
-    def save_match_status(match_id, match_import_status, postgres_connector=None):
+    def save_match_status(match_id: str, match_import_status: str, postgres_connector: PostgresConnector=None):
         try:
             if(postgres_connector is None):
                 postgres_connector = PostgresConnector()

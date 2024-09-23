@@ -9,7 +9,7 @@ from src.config_util.config_util import ConfigUtil
 
 class PostgresConnector:
 
-    def create_connection(self, db_name):
+    def create_connection(self, db_name: str):
         try:
             self.connection = psycopg2.connect(
                     host="localhost",
@@ -23,7 +23,7 @@ class PostgresConnector:
             print(f"The error '{e}' occurred.\nHave you used the setup DB call?")
             return None
 
-    def open_connection_cursor(self, db_name):
+    def open_connection_cursor(self, db_name: str):
         self.create_connection(db_name)
         self.cursor = self.connection.cursor()
 
@@ -31,7 +31,7 @@ class PostgresConnector:
         self.cursor.close()
         self.connection.close()
 
-    def execute_insert_query(self, query):
+    def execute_insert_query(self, query: str):
         try:
             self.cursor.execute(query)
         except OperationalError as e:
@@ -40,7 +40,7 @@ class PostgresConnector:
             return
         self.connection.commit()
 
-    def execute_parameterized_select_query(self, query, params):
+    def execute_parameterized_select_query(self, query: str, params):
         try:
             self.cursor.execute(query, params)
             result = self.cursor.fetchall()  # Fetch all rows from the last executed statement
@@ -51,7 +51,7 @@ class PostgresConnector:
             return None
         self.connection.commit()
 
-    def execute_parameterized_insert_query(self, query, params):
+    def execute_parameterized_insert_query(self, query: str, params):
         try:
             self.cursor.execute(query, params)
             self.connection.commit()
@@ -62,7 +62,7 @@ class PostgresConnector:
             return self
 
 
-    def execute_many_parameterized_insert_query(self, query, data_array):
+    def execute_many_parameterized_insert_query(self, query: str, data_array):
         try:
             self.cursor.executemany(query, data_array)
             self.connection.commit()
@@ -72,7 +72,7 @@ class PostgresConnector:
             return
 
 
-    def insert_into_keys_table(self, key_name, key_value):
+    def insert_into_keys_table(self, key_name: str, key_value: str):
         self.execute_parameterized_insert_query("keys",
             "INSERT INTO keys(key_name, key_value) VALUES (%s, %s)", (key_name, key_value)
         )

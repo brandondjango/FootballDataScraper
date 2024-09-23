@@ -2,6 +2,7 @@ import logging
 import os
 import time
 
+from selenium import webdriver
 from src.database_connector.postgres_connector import PostgresConnector
 from src.player_data.player_profile.player_profile_builder import PlayerProfileBuilder
 from src.web.driver_manager.driver_manager import DriverManager
@@ -11,7 +12,7 @@ from src.web.pages.squad_season_page import SquadSeasonPage
 class SquadSeasonScraper:
 
     @staticmethod
-    def scrape_squad_players(squad_id="b8fd03ef", season="2023-2024", driver=None):
+    def scrape_squad_players(squad_id: str="b8fd03ef", season: str="2023-2024", driver: webdriver=None):
 
         try:
             if (driver is None):
@@ -54,6 +55,3 @@ class SquadSeasonScraper:
         finally:
             postgres_connector.close_connection()
         return True
-
-os.environ['DB_PASS'] = "MySampleThing!#"
-SquadSeasonScraper.scrape_squad_players(squad_id="7c21e445", season="2023-2024")

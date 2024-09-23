@@ -1,7 +1,9 @@
+from src.database_connector.postgres_connector import PostgresConnector
+
 class MatchInfoTableUtil:
 
     @staticmethod
-    def save_match_info(match_info, postgres_connector):
+    def save_match_info(match_info: {}, postgres_connector: PostgresConnector):
         try:
             match_id = match_info["match_id"]
 

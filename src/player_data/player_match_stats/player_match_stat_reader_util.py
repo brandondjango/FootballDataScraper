@@ -6,7 +6,7 @@ import logging
 class PlayerMatchStatTableUtil:
 
     @staticmethod
-    def get_summary_match_stats_for_player(row, match_page, match_id):
+    def get_summary_match_stats_for_player(row, match_page: MatchStatsPage, match_id: str):
         row_cells = match_page.get_stats_from_player_rows(row)
         player_summary_stats = {}
 
@@ -27,7 +27,7 @@ class PlayerMatchStatTableUtil:
         return player_summary_stats
 
     @staticmethod
-    def save_match_summary_stats(player_summary_stats, postgres_connector):
+    def save_match_summary_stats(player_summary_stats: {}, postgres_connector: PostgresConnector):
         try:
             query = "INSERT INTO public.match_summary_stats(player_id, match_id) VALUES (%s, %s)"
             parameters = (player_summary_stats["player_id"], player_summary_stats["match_id"])
@@ -56,7 +56,7 @@ class PlayerMatchStatTableUtil:
             print("Could not insert because: " + str(e))
 
     @staticmethod
-    def save_substitute_info_to_match_summary(match_id, substitute_array, postgres_connector):
+    def save_substitute_info_to_match_summary(match_id: str, substitute_array, postgres_connector: PostgresConnector):
         try:
             for sub_tuple in substitute_array:
                 print(sub_tuple)
