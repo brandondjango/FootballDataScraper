@@ -4,11 +4,8 @@ This is the data scraper component, the other components will include a [data pr
 
 # Current to do:
 
-- Rerun match summary to get team_id and substitution
-- create "11s" profiles
-  - offensive
-  - defensive
-  - Do this in football scraper or data processor repo?
+- Rerun match summary to get team_id(split out team id fetch)
+
   
 - Add scrape by player matches
 - Manually add managers table+values
