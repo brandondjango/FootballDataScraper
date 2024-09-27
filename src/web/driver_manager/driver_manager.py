@@ -23,7 +23,8 @@ class DriverManager:
         capabilities['browserName'] = 'chrome'
 
         options = webdriver.ChromeOptions()
-        options.binary_location = "./chromedriver"
+        #todo figure this out later
+        #options.binary_location = "/Users/IdeaProjects/PyAI2/chromedriver"
 
         self.driver = webdriver.Chrome(options)
 
