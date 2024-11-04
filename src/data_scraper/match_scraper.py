@@ -216,6 +216,7 @@ class MatchScraper:
             for row in player_match_shots_rows:
                 # get player shot
                 player_shot = PlayerMatchStatShotTableUtil.get_player_shots_from_rows(row, match_page, match_id)
+                player_shot = PlayerMatchStatShotTableUtil.get_sca_player_ids(row, player_shot, match_page)
                 # save player shot
                 PlayerMatchStatShotTableUtil.save_player_match_shot(player_shot, postgres_connector)
         except Exception as e:
