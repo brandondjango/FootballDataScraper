@@ -14,13 +14,13 @@ class PostgresConnector:
             self.connection = psycopg2.connect(
                     host="localhost",
                     database="premier_league_stats",
-                    user="bdon_db",
+                    user="brandonlockridge",
                     password=os.environ['DB_PASS'],
                     #password=PostgresConnector.get_db_pass(),
                     port=5432  # default port for PostgreSQL
                 )
-        except OperationalError as e:
-            print(f"The error '{e}' occurred.\nHave you used the setup DB call?")
+        except Exception as e:
+            print(f"The error\n\n '{e}'\n\n occurred.\nHave you used the setup DB call?")
             return None
 
     def open_connection_cursor(self, db_name: str):

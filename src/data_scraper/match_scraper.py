@@ -79,6 +79,8 @@ class MatchScraper:
             match_details["away_team"] = match_page.get_away_team()
             match_details["home_score"] = match_page.get_home_team_score()
             match_details["away_score"] = match_page.get_away_team_score()
+            match_details["home_team_id"] = match_page.get_home_team_id()
+            match_details["away_team_id"] = match_page.get_away_team_id()
 
 
             if(postgres_connector is None):

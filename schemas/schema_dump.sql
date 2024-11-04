@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: elevens_profiles; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: elevens_profiles; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.elevens_profiles (
@@ -33,10 +33,10 @@ CREATE TABLE public.elevens_profiles (
 );
 
 
-ALTER TABLE public.elevens_profiles OWNER TO "brandon.lockridge";
+ALTER TABLE public.elevens_profiles OWNER TO "brandonlockridge";
 
 --
--- Name: match_imported_status; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: match_imported_status; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.match_imported_status (
@@ -45,10 +45,10 @@ CREATE TABLE public.match_imported_status (
 );
 
 
-ALTER TABLE public.match_imported_status OWNER TO "brandon.lockridge";
+ALTER TABLE public.match_imported_status OWNER TO "brandonlockridge";
 
 --
--- Name: match_info; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: match_info; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.match_info (
@@ -63,10 +63,10 @@ CREATE TABLE public.match_info (
 );
 
 
-ALTER TABLE public.match_info OWNER TO "brandon.lockridge";
+ALTER TABLE public.match_info OWNER TO "brandonlockridge";
 
 --
--- Name: match_shots_stats; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: match_shots_stats; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.match_shots_stats (
@@ -91,10 +91,10 @@ CREATE TABLE public.match_shots_stats (
 );
 
 
-ALTER TABLE public.match_shots_stats OWNER TO "brandon.lockridge";
+ALTER TABLE public.match_shots_stats OWNER TO "brandonlockridge";
 
 --
--- Name: match_summary_stats; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: match_summary_stats; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.match_summary_stats (
@@ -137,10 +137,10 @@ CREATE TABLE public.match_summary_stats (
 );
 
 
-ALTER TABLE public.match_summary_stats OWNER TO "brandon.lockridge";
+ALTER TABLE public.match_summary_stats OWNER TO "brandonlockridge";
 
 --
--- Name: player_match_stats; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: player_match_stats; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.player_match_stats (
@@ -148,10 +148,10 @@ CREATE TABLE public.player_match_stats (
 );
 
 
-ALTER TABLE public.player_match_stats OWNER TO "brandon.lockridge";
+ALTER TABLE public.player_match_stats OWNER TO "brandonlockridge";
 
 --
--- Name: players; Type: TABLE; Schema: public; Owner: brandon.lockridge
+-- Name: players; Type: TABLE; Schema: public; Owner: brandonlockridge
 --
 
 CREATE TABLE public.players (
@@ -160,10 +160,10 @@ CREATE TABLE public.players (
 );
 
 
-ALTER TABLE public.players OWNER TO "brandon.lockridge";
+ALTER TABLE public.players OWNER TO "brandonlockridge";
 
 --
--- Name: match_imported_status match_imported_status_pkey; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: match_imported_status match_imported_status_pkey; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.match_imported_status
@@ -171,7 +171,7 @@ ALTER TABLE ONLY public.match_imported_status
 
 
 --
--- Name: match_info match_info_pkey; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: match_info match_info_pkey; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.match_info
@@ -179,7 +179,7 @@ ALTER TABLE ONLY public.match_info
 
 
 --
--- Name: match_shots_stats match_shots_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: match_shots_stats match_shots_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.match_shots_stats
@@ -187,7 +187,7 @@ ALTER TABLE ONLY public.match_shots_stats
 
 
 --
--- Name: players player_id_unique; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: players player_id_unique; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.players
@@ -195,7 +195,7 @@ ALTER TABLE ONLY public.players
 
 
 --
--- Name: elevens_profiles unique_elevens_match_id; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: elevens_profiles unique_elevens_match_id; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.elevens_profiles
@@ -203,7 +203,7 @@ ALTER TABLE ONLY public.elevens_profiles
 
 
 --
--- Name: match_summary_stats unique_match_player_combination; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: match_summary_stats unique_match_player_combination; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.match_summary_stats
@@ -211,7 +211,7 @@ ALTER TABLE ONLY public.match_summary_stats
 
 
 --
--- Name: match_summary_stats unique_match_player_constraint; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: match_summary_stats unique_match_player_constraint; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.match_summary_stats
@@ -219,7 +219,7 @@ ALTER TABLE ONLY public.match_summary_stats
 
 
 --
--- Name: match_shots_stats unique_shot_id; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: match_shots_stats unique_shot_id; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.match_shots_stats
@@ -227,7 +227,7 @@ ALTER TABLE ONLY public.match_shots_stats
 
 
 --
--- Name: players unique_varchar_id; Type: CONSTRAINT; Schema: public; Owner: brandon.lockridge
+-- Name: players unique_varchar_id; Type: CONSTRAINT; Schema: public; Owner: brandonlockridge
 --
 
 ALTER TABLE ONLY public.players

@@ -143,6 +143,10 @@ def db_setup_endpoint():
 
     os.environ['DB_PASS'] = db_pass
 
+    postgres_connector = PostgresConnector()
+    postgres_connector.open_connection_cursor("premier_league_stats")
+    postgres_connector.close_connection()
+
     # Process the data as needed
     response = {
         'status': 'success',
